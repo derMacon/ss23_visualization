@@ -1,0 +1,106 @@
+# Vis 01
+
+## Aufg. 01
+
+### baseball:
+
+Tuffte - data ink:
+- label wichtig "Major League Baseball" aber Pfeile unwichtig (kein Data Ink)
+- Zeitachse unnoetig (haette gereicht 2013 - 2014)
+- Logos unnoetig, Namen haetten gereicht
+- Farben unnoetig, kein Dataink (keine Information nur in Farbe gebunden)
+
+
+Dos and Donts 
+- show full y-axis: nicht vorhanden
+- consistent x-axis intervals: nicht vorhanden
+- Edward Tufte in a nutshell: remove clutter - ist voll mit Clutter, nicht ordentlich gemacht
+- highlight what’s important: In den Grundzuegen joa, nicht so richtig dargestellt
+- sorting: Daten sind sortiert
+- do not use 3d or other visual effects: keine 3d Efekte
+- direct labeling where possible: wurde gemacht
+- avoid pie charts: ist kein Pie Chart
+- avoid stacked charts: ist kein Stacked Chart
+- do not use maps for everything with spatial dimension: wurde gemacht
+- avoid animations, use small multiples: richtig gemacht, keine Animation
+- show level of confidence: akkurat, nicht angegeben - impliziert akkurat
+- tell the ‘why’ and ‘how’: nicht umgesetzt, schwierig zu verstehen
+- how to treat missing data: nicht beschrieben
+- do not confuse causation and correlation: nicht vorhanden
+- do not compare apples with oranges: unklar was dargestellt wird - nicht vergleichbar
+- adjust for inflation: alles Daten aus einem Jahr, keine Inlfation noetig
+- do not forget color deficiency: keine Informationen an Farbe gebunden
+
+Chart:
+- Fehlende Infos muessen rein: Achsen, was fuer ein Geldwert
+- am besten Scatter Plot um Zusammenhang von Win/Loss Average mit Budget in Korrelation zu setzen
+   - mit Hilfslinie darzustellen wo die Teams im Verhaeltnis sein sollten
+   
+ 
+Erneuerbare Energie:
+
+Tuffte - data ink:
+- Bildchen unnoetig 
+- 3d Animation unnoetig 
+- Farben hier zwar relevant, aber schlecht geloest
+
+Dos and Donts 
+- show full y-axis: ist gut, evtl. koennte man noch bis 100% gehen (alle Messungen wurden proportional gezeigt)
+- consistent x-axis intervals: vorhanden konstistent (5 Jahre)
+- Edward Tufte in a nutshell: remove clutter - beide Graphen wurde hier in einen Graph geklatscht
+- highlight what’s important: ist gemacht
+- sorting: Daten sind sortiert
+- do not use 3d or other visual effects: 3d Efekte vorhanden - schlecht
+- direct labeling where possible: wurde nur mit Bildern gemacht
+- avoid pie charts: ist kein Pie Chart
+- avoid stacked charts: ist kein Stacked Chart
+- do not use maps for everything with spatial dimension: wurde korrekt gemacht
+- avoid animations, use small multiples: richtig gemacht, keine Animation
+- show level of confidence: Fehlerangabe nicht angegeben
+- tell the ‘why’ and ‘how’: Quelle koennte als how gewertet werden, das why fehlt
+- how to treat missing data: nicht beschrieben
+- do not confuse causation and correlation: nicht vorhanden
+- do not compare apples with oranges: passt alles zusammen
+- adjust for inflation: alles Daten aus einem Jahr, keine Inflation noetig
+- do not forget color deficiency: keine Informationen an Farbe gebunden. zwar farblich hervorgehoben, aber man kann die Infos auch als Farbenblinder erkennen
+
+Chart:
+- oben links: eigener Graph
+- beim eigentlichen Graphen Prozentwerte auf die linke Seite und Kurven direkt labeln
+
+
+Trend of Application: 
+
+Tuffte - data ink:
+- data ink bis auf Grid alles
+- Muster in den Saeulen sind nicht direkt Data, weil sie auch angeordnet sind
+
+Dos and Donts 
+- show full y-axis: ist gut, aber unbeschriftet
+- consistent x-axis intervals: vorhanden
+- Edward Tufte in a nutshell: remove clutter - tendenziell ok, Muster machen die Darstellung etwas unuebersichtlich
+- highlight what’s important: ist gemacht, es geht nach oben
+- sorting: Daten sind sortiert
+- do not use 3d or other visual effects: 3d Efekte vorhanden - schlecht
+- direct labeling where possible: wurde mit Legende geloest, schlecht
+- avoid pie charts: ist kein Pie Chart
+- avoid stacked charts: ist kein Stacked Chart
+- do not use maps for everything with spatial dimension: wurde korrekt gemacht
+- avoid animations, use small multiples: richtig gemacht, keine Animation
+- show level of confidence: Fehlerangabe nicht angegeben
+- tell the ‘why’ and ‘how’: keine Quelle, keine weiteren Infos, nur Ueberschrift, Legende ohne Kontext etwas kryptisch
+- how to treat missing data: nicht beschrieben
+- do not confuse causation and correlation: kein Problem
+- do not compare apples with oranges: keine Aussage moeglich - zu wenig infos
+- adjust for inflation: hier irrelevant
+- do not forget color deficiency: keine Informationen an Farbe gebunden, farblos
+
+
+Chart: 
+- 3d Efekte weg
+- in 4x Barcharts aufteilen
+- Achsen beschriftet
+- Quelle hinzufuegen
+
+
+
