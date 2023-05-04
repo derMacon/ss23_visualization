@@ -2,6 +2,8 @@
 \usepackage[margin=0.9in]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage{pdfpages}
+\usepackage{graphicx}
+\usepackage{placeins}
 
 \title{Visualization - Exercise 01}
 \author{
@@ -130,5 +132,15 @@
 
     The following figure displays how we would implement the principles from the lecture.
     \includepdf[pages=3]{./attachments/vis-01_ex01_img.pdf}
+
+    \clearpage
+
+    \section{Exercise 1.2: a first visualization task.}
+    \FloatBarrier
+    \begin{figure*}[!ht]
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{./attachments/VisZettel1-export}
+        \caption{Screenshot from Jupyter Notebook}
+    \end{figure*}
 
 \end{document}
