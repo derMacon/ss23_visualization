@@ -2,16 +2,9 @@ import numpy as np
 from datetime import datetime
 import pandas as pd
 
+GAME_LOGS_DATA_WORLD = '../datasets/retrosheets/game-logs_combined/game_logs_data-world.csv'
 
-
-# df = pd.read_csv('../datasets/test/test.csv', sep=',', header=None)
-
-def convert_to_datetime64(date_string):
-    datetime_obj = datetime.strptime(date_string, '%Y%m%d')
-    return np.datetime64(datetime_obj, 'D')
-
-
-dtypeDict = {
+_dtypeDict = {
     'date': str,
     'number_of_game': np.uint32,
     'day_of_week': str,
@@ -177,13 +170,21 @@ dtypeDict = {
     'acquisition_info': str
 }
 
-def process_value(value):
+def _process_value(value):
     if value == '':
         return None
     else:
         return value
-    
-df = pd.read_csv('../datasets/retrosheets/game-logs_combined/game_logs_data-world.csv',
-                 converters={col: process_value for col in dtypeDict.keys()})
 
-# df['date'] = df['date'].apply(convert_to_datetime64)
+def _convert_to_datetime64(date_string):
+    datetime_obj = datetime.strptime(date_string, '%Y%m%d')
+    return np.datetime64(datetime_obj, 'D')
+
+def _sanitize_df(df):
+    df['date'] = df['date'].apply(_convert_to_datetime64)
+    # TODO sanitize all other fields
+    return df
+
+def read_game_logs():
+    df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()})
+    return _sanitize_df(df)
