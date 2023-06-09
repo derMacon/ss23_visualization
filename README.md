@@ -12,6 +12,8 @@
 ## Final Project
 - presentation of the results serves as an oral exam
 - dataset source [data world](https://data.world/dataquest/mlb-game-logs)
+  - user: `spam-sh`
+  - pass: `abc1234abc1234`
 - since the dataset is too large for a GitHub project, download it locally to the following directory
   - `./datasets/retrosheets/game-logs_combined/game_logs_data-world.csv`
 
