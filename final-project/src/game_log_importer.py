@@ -180,8 +180,6 @@ def _convert_to_datetime64(date_string):
     datetime_obj = datetime.strptime(date_string, '%Y%m%d')
     return np.datetime64(datetime_obj, 'D')
 
-def
-
 def _sanitize_df(df):
     df['date'] = df['date'].apply(_convert_to_datetime64)
     # TODO sanitize all other fields
