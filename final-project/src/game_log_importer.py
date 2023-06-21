@@ -1,6 +1,7 @@
 import numpy as np
 from datetime import datetime
 import pandas as pd
+import itertools as IT
 
 GAME_LOGS_DATA_WORLD = '../datasets/retrosheets/game-logs_combined/game_logs_data-world.csv'
 
@@ -170,21 +171,45 @@ _dtypeDict = {
     'acquisition_info': str
 }
 
+
 def _process_value(value):
     if value == '':
         return None
     else:
         return value
 
+
 def _convert_to_datetime64(date_string):
     datetime_obj = datetime.strptime(date_string, '%Y%m%d')
     return np.datetime64(datetime_obj, 'D')
+
 
 def _sanitize_df(df):
     df['date'] = df['date'].apply(_convert_to_datetime64)
     # TODO sanitize all other fields
     return df
 
+
+def _clean_partial_games(df):
+    return df.drop(df[df.acquisition_info != 'Y'].index)
+
+
+def valid(chunks):
+    for chunk in chunks:
+        mask = chunk['date'] < 19120814
+        if mask.all():
+            yield chunk
+        else:
+            yield chunk.loc[mask]
+            break
+
 def read_game_logs():
-    df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()})
-    return _sanitize_df(df)
+    # df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()})
+
+    chunksize = 10 ** 5
+    chunks = pd.read_csv(GAME_LOGS_DATA_WORLD, chunksize=chunksize)
+    df = pd.concat(valid(chunks))
+
+    # return df
+    # return _sanitize_df(df)
+    return df
