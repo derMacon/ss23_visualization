@@ -1,7 +1,6 @@
 import numpy as np
 from datetime import datetime
 import pandas as pd
-import itertools as IT
 
 GAME_LOGS_DATA_WORLD = '../datasets/retrosheets/game-logs_combined/game_logs_data-world.csv'
 
@@ -26,7 +25,7 @@ _dtypeDict = {
     'attendance': np.int32,
     'length_minutes': np.int32,
     'v_line_score': str,
-    'h_line_score': np.int32,
+    'h_line_score': str,
     'v_at_bats': np.int32,
     'v_hits': np.int32,
     'v_doubles': np.int32,
@@ -37,8 +36,7 @@ _dtypeDict = {
     'v_sacrifice_flies': np.int32,
     'v_hit_by_pitch': np.int32,
     'v_walks': np.int32,
-    'v_intentional': np.int32,
-    'walks': np.int32,
+    'v_intentional walks': np.int32,
     'v_strikeouts': np.int32,
     'v_stolen_bases': np.int32,
     'v_caught_stealing': np.int32,
@@ -66,8 +64,7 @@ _dtypeDict = {
     'h_sacrifice_flies': np.int32,
     'h_hit_by_pitch': np.int32,
     'h_walks': np.int32,
-    'h_intentional': np.int32,
-    'walks': np.int32,
+    'h_intentional walks': np.int32,
     'h_strikeouts': np.int32,
     'h_stolen_bases': np.int32,
     'h_caught_stealing': np.int32,
@@ -174,7 +171,7 @@ _dtypeDict = {
 
 def _process_value(value):
     if value == '':
-        return None
+        return
     else:
         return value
 
@@ -185,8 +182,21 @@ def _convert_to_datetime64(date_string):
 
 
 def _sanitize_df(df):
-    df['date'] = df['date'].apply(_convert_to_datetime64)
+    placeholder = '-12345'
+    # fill empty cells with placeholder
+    df = df.fillna(placeholder)
+    # necessary to cast with type dictionary
+    df = df.astype(_dtypeDict)
+    # after cast insert nan value, for an early fail in later processing if list
+    # is not properly sanitized
+    df = df.replace(placeholder, np.nan)
+
+    # create a new column containing just the year - easier for later processing
+    df['date'] = pd.to_datetime(df['date'])
+    df = pd.concat([df, df['date'].apply(lambda x: x.year).rename('date_year')], axis=1)
+
     # TODO sanitize all other fields
+
     return df
 
 
@@ -194,22 +204,6 @@ def _clean_partial_games(df):
     return df.drop(df[df.acquisition_info != 'Y'].index)
 
 
-def valid(chunks):
-    for chunk in chunks:
-        mask = chunk['date'] < 19120814
-        if mask.all():
-            yield chunk
-        else:
-            yield chunk.loc[mask]
-            break
-
 def read_game_logs():
-    # df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()})
-
-    chunksize = 10 ** 5
-    chunks = pd.read_csv(GAME_LOGS_DATA_WORLD, chunksize=chunksize)
-    df = pd.concat(valid(chunks))
-
-    # return df
-    # return _sanitize_df(df)
-    return df
+    df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()}, nrows=5000)
+    return _sanitize_df(df)
