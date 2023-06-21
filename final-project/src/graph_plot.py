@@ -9,6 +9,6 @@ def plot_v_score_count(df):
 
     means_v_score = df.groupby(['date_year'])['v_score'].mean()
     plt.plot(means_v_score.keys(), means_v_score, color='red', label='mean')
-    plt.title('title')
+    plt.title('visiting score')
     plt.legend()
     plt.show()
