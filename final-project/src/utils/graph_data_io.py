@@ -1,8 +1,12 @@
 import numpy as np
+import inspect
+import os
+import matplotlib.pyplot as plt
 from datetime import datetime
 import pandas as pd
 
 GAME_LOGS_DATA_WORLD = '../datasets/retrosheets/game-logs_combined/game_logs_data-world.csv'
+OUTPUT_DIR = '../graphs'
 
 _dtypeDict = {
     'date': str,
@@ -205,5 +209,27 @@ def _clean_partial_games(df):
 
 
 def read_game_logs():
+    print('- started reading csv dataset')
+    # df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()})
     df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()}, nrows=5000)
+    print('- finished reading csv dataset')
     return _sanitize_df(df)
+
+
+def export_graph(plotting_func, df):
+    callback_package_name = inspect.getmodule(plotting_func).__package__.replace(".", "/")
+    callback_file_name = os.path.splitext(os.path.basename(inspect.getfile(plotting_func)))[0]
+    callback_func_name = plotting_func.__name__
+
+    output_dir = OUTPUT_DIR + '/' + callback_package_name + '/' + callback_file_name + '/'
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    plotting_func(df)
+
+    output_file = os.path.realpath(output_dir + callback_func_name)
+    print('- writing plot: ', output_file)
+
+    plt.savefig(output_file)
+    plt.show()
+

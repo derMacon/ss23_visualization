@@ -306,5 +306,5 @@ TSWLatexianTemp*
 
 final-project/datasets/retrosheets/game-logs_combined/game_logs_data-world.csv
 **/datasets/**/*.csv
-**/__pychache__/
+**/__pycache__/
 **/~.lock*
