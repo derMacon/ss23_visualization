@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
-import numpy as np
 
 
-def plot_v_score_count(df):
+def v_score_count(df):
     df = df.sort_values(["v_score"])
 
     threshold = df['v_score'].quantile(0.99)
@@ -15,7 +14,7 @@ def plot_v_score_count(df):
     plt.legend()
 
 
-def plot_h_score_count(df):
+def h_score_count(df):
     df = df.sort_values(["h_score"])
 
     threshold = df['h_score'].quantile(0.99)
@@ -27,7 +26,8 @@ def plot_h_score_count(df):
     plt.title('home score')
     plt.legend()
 
-def plot_vh_score_comparison(df):
+
+def vh_score_comparison(df):
     years = df.groupby(['date_year'])
     means_v_score = years['v_score'].mean()
     means_h_score = years['h_score'].mean()
@@ -42,4 +42,3 @@ def plot_vh_score_comparison(df):
     ax.set_ylabel('Y-axis')
     ax.set_title('compare score')
     ax.legend()
-

@@ -190,15 +190,14 @@ def _sanitize_df(gamelog_df):
     gamelog_df = gamelog_df.astype(_dtypeDict)
     # after cast insert nan value, for an early fail in later processing if list
     # is not properly sanitized
-    gamelog_df = gamelog_df.replace(placeholder, np.nan)
+    gamelog_df = gamelog_df.replace(int(placeholder), np.nan)
+    gamelog_df = gamelog_df.replace(placeholder, None)
 
     # translate team ids
     abreviations_df = pd.read_csv(GAME_LOGS_ABBREVIATIONS)
     team_mapping = dict(zip(abreviations_df['team'], abreviations_df['city'] + ' - ' + abreviations_df['nickname']))
     gamelog_df = pd.concat([gamelog_df, gamelog_df['v_name'].map(team_mapping).rename('v_name_translate')], axis=1)
     gamelog_df = pd.concat([gamelog_df, gamelog_df['h_name'].map(team_mapping).rename('h_name_translate')], axis=1)
-
-    # TODO sanitize all other fields
 
     return gamelog_df
 
@@ -207,14 +206,15 @@ def _add_custom_fields(df):
     # create a new column containing just the year - easier for later processing
     df['date'] = pd.to_datetime(df['date'])
     df = pd.concat([df, df['date'].apply(lambda x: x.year).rename('date_year')], axis=1)
+    df = pd.concat([df, df['date'].apply(lambda x: str(x.year)[:3] + '0s').rename('date_decade')], axis=1)
 
     return df
 
 
 def read_game_logs():
     print('- started reading csv dataset')
-    # df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()})
-    df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()}, nrows=5000)
+    df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()})
+    # df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()}, nrows=5000)
     print('- finished reading csv dataset')
 
     df = _sanitize_df(df)

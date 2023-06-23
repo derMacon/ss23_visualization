@@ -308,3 +308,4 @@ final-project/datasets/retrosheets/game-logs_combined/game_logs_data-world.csv
 **/datasets/**/*.csv
 **/__pycache__/
 **/~.lock*
+**/.~lock.game_logs_data-world.csv#
