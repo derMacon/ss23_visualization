@@ -6,6 +6,7 @@ from datetime import datetime
 import pandas as pd
 
 GAME_LOGS_DATA_WORLD = '../datasets/retrosheets/game-logs_combined/game_logs_data-world.csv'
+GAME_LOGS_ABBREVIATIONS = '../datasets/retrosheets/game-logs_combined/TEAMABR.TXT'
 OUTPUT_DIR = '../graphs'
 
 _dtypeDict = {
@@ -180,32 +181,34 @@ def _process_value(value):
         return value
 
 
-def _convert_to_datetime64(date_string):
-    datetime_obj = datetime.strptime(date_string, '%Y%m%d')
-    return np.datetime64(datetime_obj, 'D')
-
-
-def _sanitize_df(df):
+def _sanitize_df(gamelog_df):
+    # deal with null / empty values
     placeholder = '-12345'
     # fill empty cells with placeholder
-    df = df.fillna(placeholder)
+    gamelog_df = gamelog_df.fillna(placeholder)
     # necessary to cast with type dictionary
-    df = df.astype(_dtypeDict)
+    gamelog_df = gamelog_df.astype(_dtypeDict)
     # after cast insert nan value, for an early fail in later processing if list
     # is not properly sanitized
-    df = df.replace(placeholder, np.nan)
+    gamelog_df = gamelog_df.replace(placeholder, np.nan)
 
+    # translate team ids
+    abreviations_df = pd.read_csv(GAME_LOGS_ABBREVIATIONS)
+    team_mapping = dict(zip(abreviations_df['team'], abreviations_df['city'] + ' - ' + abreviations_df['nickname']))
+    gamelog_df = pd.concat([gamelog_df, gamelog_df['v_name'].map(team_mapping).rename('v_name_translate')], axis=1)
+    gamelog_df = pd.concat([gamelog_df, gamelog_df['h_name'].map(team_mapping).rename('h_name_translate')], axis=1)
+
+    # TODO sanitize all other fields
+
+    return gamelog_df
+
+
+def _add_custom_fields(df):
     # create a new column containing just the year - easier for later processing
     df['date'] = pd.to_datetime(df['date'])
     df = pd.concat([df, df['date'].apply(lambda x: x.year).rename('date_year')], axis=1)
 
-    # TODO sanitize all other fields
-
     return df
-
-
-def _clean_partial_games(df):
-    return df.drop(df[df.acquisition_info != 'Y'].index)
 
 
 def read_game_logs():
@@ -213,7 +216,11 @@ def read_game_logs():
     # df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()})
     df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()}, nrows=5000)
     print('- finished reading csv dataset')
-    return _sanitize_df(df)
+
+    df = _sanitize_df(df)
+    df = _add_custom_fields(df)
+
+    return df
 
 
 def export_graph(plotting_func, df):
