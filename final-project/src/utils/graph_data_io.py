@@ -181,7 +181,7 @@ def _process_value(value):
         return value
 
 
-def _sanitize_df(gamelog_df):
+def _empty_flags_for_empty_cells(gamelog_df):
     # deal with null / empty values
     placeholder = '-12345'
     # fill empty cells with placeholder
@@ -192,7 +192,38 @@ def _sanitize_df(gamelog_df):
     # is not properly sanitized
     gamelog_df = gamelog_df.replace(int(placeholder), np.nan)
     gamelog_df = gamelog_df.replace(placeholder, None)
+    return gamelog_df
 
+
+def _sanitize_df(gamelog_df):
+    gamelog_df = _empty_flags_for_empty_cells(gamelog_df)
+    return gamelog_df
+
+
+def _append_date_summaries(gamelog_df):
+    """
+    appends new values to input dataframe
+    - date_year: year in which the game took place
+    - date_decade: decade in wich the game took place
+    :param gamelog_df: input dataframe
+    :return: appended dataframe
+    """
+    # create a new column containing just the year - easier for later processing
+    gamelog_df['date'] = pd.to_datetime(gamelog_df['date'])
+    gamelog_df = pd.concat([gamelog_df, gamelog_df['date'].apply(lambda x: x.year).rename('date_year')], axis=1)
+    gamelog_df = pd.concat(
+        [gamelog_df, gamelog_df['date'].apply(lambda x: str(x.year)[:3] + '0s').rename('date_decade')], axis=1)
+    return gamelog_df
+
+
+def _append_team_ids_translation(gamelog_df):
+    """
+    appends new values to input dataframe
+    - v_name_translate: city and full name of the visiting team combined
+    - h_name_translate: city and full name of the home team combined
+    :param gamelog_df: input dataframe
+    :return: appended dataframe
+    """
     # translate team ids
     abreviations_df = pd.read_csv(GAME_LOGS_ABBREVIATIONS)
     team_mapping = dict(zip(abreviations_df['team'], abreviations_df['city'] + ' - ' + abreviations_df['nickname']))
@@ -202,19 +233,33 @@ def _sanitize_df(gamelog_df):
     return gamelog_df
 
 
-def _add_custom_fields(df):
-    # create a new column containing just the year - easier for later processing
-    df['date'] = pd.to_datetime(df['date'])
-    df = pd.concat([df, df['date'].apply(lambda x: x.year).rename('date_year')], axis=1)
-    df = pd.concat([df, df['date'].apply(lambda x: str(x.year)[:3] + '0s').rename('date_decade')], axis=1)
+def _append_team_duration(gamelog_df):
+    """
+    appends new values to input dataframe
+    - date_h_duration: years which the home team existed
+    - date_v_duration: years which the visiting team existed
+    :param gamelog_df: input dataframe
+    :return: appended dataframe
+    """
+    abreviations_df = pd.read_csv(GAME_LOGS_ABBREVIATIONS)
+    duration_mapping = dict(zip(abreviations_df['team'], abreviations_df['last_year'] - abreviations_df['first_year']))
+    gamelog_df = pd.concat([gamelog_df, gamelog_df['h_name'].map(duration_mapping).rename('date_h_duration')], axis=1)
+    gamelog_df = pd.concat([gamelog_df, gamelog_df['v_name'].map(duration_mapping).rename('date_v_duration')], axis=1)
 
-    return df
+    return gamelog_df
+
+
+def _add_custom_fields(gamelog_df):
+    gamelog_df = _append_date_summaries(gamelog_df)
+    gamelog_df = _append_team_ids_translation(gamelog_df)
+    gamelog_df = _append_team_duration(gamelog_df)
+    return gamelog_df
 
 
 def read_game_logs():
     print('- started reading csv dataset')
-    # df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()})
-    df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()}, nrows=5000)
+    df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()})
+    # df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()}, nrows=5000)
     print('- finished reading csv dataset')
 
     df = _sanitize_df(df)
@@ -239,4 +284,3 @@ def export_graph(plotting_func, df):
 
     plt.savefig(output_file)
     plt.show()
-
