@@ -213,8 +213,8 @@ def _add_custom_fields(df):
 
 def read_game_logs():
     print('- started reading csv dataset')
-    df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()})
-    # df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()}, nrows=5000)
+    # df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()})
+    df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()}, nrows=5000)
     print('- finished reading csv dataset')
 
     df = _sanitize_df(df)
