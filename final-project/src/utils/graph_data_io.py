@@ -258,10 +258,12 @@ def _add_custom_fields(gamelog_df):
 def read_game_logs():
     print('- started reading csv dataset')
 
-    if os.environ.get('VIS_DEBUG') == 'true':
-        row_count = 100000
-        print("- debug flag set, only reading {} entries".format(row_count))
-        df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()}, nrows=row_count)
+    debug_row_count = os.environ.get('VIS_ROW_COUNT')
+
+    if debug_row_count is not None:
+        print("- debug flag set, only reading {} entries".format(debug_row_count))
+        df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()},
+                         nrows=int(debug_row_count))
     else:
         df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()})
     print('- finished reading csv dataset')

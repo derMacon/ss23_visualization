@@ -9,9 +9,10 @@ MIN_TEAM_LIFETIME_YEARS = 10
 
 
 def extract_win_stats(input_df):
-    home_games_won_out = {}
-    visiting_games_won_out = {}
-    overall_games_won_out = {}
+    home_games_won_per_year = {}
+    visiting_games_won_per_year = {}
+    overall_games_won_per_year = {}
+    overall_games_won_total_sorted = {}
 
     teams = np.unique(input_df[['v_name_translate', 'h_name_translate']].values.ravel())
     for curr_team in teams:
@@ -35,12 +36,18 @@ def extract_win_stats(input_df):
                             for key in set(curr_home_games_won) | set(curr_visiting_games_won)}
 
         if len(curr_home_games_won) > 0:
-            home_games_won_out[curr_team] = curr_home_games_won
+            home_games_won_per_year[curr_team] = dict(sorted(curr_home_games_won.items()))
 
         if len(curr_visiting_games_won) > 0:
-            visiting_games_won_out[curr_team] = curr_visiting_games_won
+            visiting_games_won_per_year[curr_team] = dict(sorted(curr_visiting_games_won.items()))
 
         if len(curr_merged_wins) > 0:
-            overall_games_won_out[curr_team] = curr_merged_wins
+            overall_games_won_per_year[curr_team] = dict(sorted(curr_merged_wins.items()))
+            overall_games_won_total_sorted[curr_team] = sum(curr_merged_wins.values())
 
-    return home_games_won_out, visiting_games_won_out, overall_games_won_out
+        # overall_games_won_total_sorted = dict(sorted(overall_games_won_total_sorted.items(), key=lambda x: x[1]))
+
+    return home_games_won_per_year,\
+        visiting_games_won_per_year,\
+        overall_games_won_per_year,\
+        overall_games_won_total_sorted

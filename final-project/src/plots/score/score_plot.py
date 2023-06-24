@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from ...utils.graph_utils import extract_win_stats
+from matplotlib import cm
 
+from ...utils.graph_utils import extract_win_stats
 
 
 def v_score_count(df):
@@ -48,14 +49,21 @@ def vh_score_comparison(df):
 
 
 def winning_teams(df):
-    overall_games_won_out = extract_win_stats(df)[2]
-    # print(overall_games_won_out)
+    games_won_per_year, games_won_total = extract_win_stats(df)[2:4]
 
     fig, ax = plt.subplots()
     ax.set_title('wins per year')
 
-    for curr_team, win_stats in overall_games_won_out.items():
-        ax.plot(win_stats.keys(), win_stats.values(), label=curr_team)
+    highlighted_teams = [
+        max(games_won_total, key=games_won_total.get),
+        min(games_won_total, key=games_won_total.get)
+    ]
+
+    for curr_team, win_stats in games_won_per_year.items():
         ax.set_xlabel('X-axis')
         ax.set_ylabel('Y-axis')
-        # ax.legend()
+        if curr_team in highlighted_teams:
+            ax.plot(win_stats.keys(), win_stats.values(), label=curr_team)
+            ax.legend()
+        else:
+            ax.plot(win_stats.keys(), win_stats.values(), c=cm.gray(0.8),alpha=0.2,zorder=-1)
