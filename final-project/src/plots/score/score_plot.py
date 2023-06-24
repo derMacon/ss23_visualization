@@ -49,21 +49,23 @@ def vh_score_comparison(df):
 
 
 def winning_teams(df):
-    games_won_per_year, games_won_total = extract_win_stats(df)[2:4]
+    games_won_per_year, games_won_total, average_wins_per_year = extract_win_stats(df)[2:5]
 
     fig, ax = plt.subplots()
     ax.set_title('wins per year')
 
-    highlighted_teams = [
-        max(games_won_total, key=games_won_total.get),
-        min(games_won_total, key=games_won_total.get)
-    ]
+    highlighted_teams = {
+        max(games_won_total, key=games_won_total.get): 'total - most wins: ',
+        min(games_won_total, key=games_won_total.get): 'total - least wins: ',
+        min(average_wins_per_year, key=average_wins_per_year.get): 'best average: ',
+        min(average_wins_per_year, key=average_wins_per_year.get): 'worst average: ',
+    }
 
     for curr_team, win_stats in games_won_per_year.items():
         ax.set_xlabel('X-axis')
         ax.set_ylabel('Y-axis')
         if curr_team in highlighted_teams:
-            ax.plot(win_stats.keys(), win_stats.values(), label=curr_team)
+            ax.plot(win_stats.keys(), win_stats.values(), label=highlighted_teams[curr_team] + curr_team)
             ax.legend()
         else:
             ax.plot(win_stats.keys(), win_stats.values(), c=cm.gray(0.8),alpha=0.2,zorder=-1)
