@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from ...utils.graph_utils import extract_win_stats
+
 
 
 def v_score_count(df):
@@ -46,43 +48,14 @@ def vh_score_comparison(df):
 
 
 def winning_teams(df):
-    teams = np.unique(df[['v_name_translate', 'h_name_translate']].values.ravel())
-    # teams = ['Washington - Nationals']
-    wins_per_year = {}
+    overall_games_won_out = extract_win_stats(df)[2]
+    # print(overall_games_won_out)
 
     fig, ax = plt.subplots()
+    ax.set_title('wins per year')
 
-    for curr_team in teams:
-
-        home_games_won = df[(df['v_name_translate'] == curr_team) & (df['h_score'] > df['v_score'])] \
-            .groupby('date_decade') \
-            .size() \
-            .to_dict()
-
-        visiting_games_won = df[(df['h_name_translate'] == curr_team) & (df['h_score'] < df['v_score'])] \
-            .groupby('date_decade') \
-            .size() \
-            .to_dict()
-
-        merged_wins = {key: home_games_won.get(key, 0) + visiting_games_won.get(key, 0)
-                       for key in set(home_games_won) | set(visiting_games_won)}
-
-        wins_per_year[curr_team] = merged_wins
-
-
-
-
-        # ax.plot(merged_wins.keys(), merged_wins.values(), label=curr_team)
-        #
-        # ax.set_xlabel('X-axis')
-        # ax.set_ylabel('Y-axis')
-        # ax.set_title('compare score')
+    for curr_team, win_stats in overall_games_won_out.items():
+        ax.plot(win_stats.keys(), win_stats.values(), label=curr_team)
+        ax.set_xlabel('X-axis')
+        ax.set_ylabel('Y-axis')
         # ax.legend()
-
-    # for (team, year), win_count in home_games_won:
-    #     wins_per_year[team] =
-
-    #     home_games_won = df[[curr_team, df['h_score'] > df['v_score']]].groupby('date_year').size().to_dict()
-    #     print(home_games_won)
-    # print(home_games_won)
-    # home_games_won.first()

@@ -2,7 +2,6 @@ import numpy as np
 import inspect
 import os
 import matplotlib.pyplot as plt
-from datetime import datetime
 import pandas as pd
 
 GAME_LOGS_DATA_WORLD = '../datasets/retrosheets/game-logs_combined/game_logs_data-world.csv'
@@ -258,8 +257,13 @@ def _add_custom_fields(gamelog_df):
 
 def read_game_logs():
     print('- started reading csv dataset')
-    df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()})
-    # df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()}, nrows=5000)
+
+    if os.environ.get('VIS_DEBUG') == 'true':
+        row_count = 100000
+        print("- debug flag set, only reading {} entries".format(row_count))
+        df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()}, nrows=row_count)
+    else:
+        df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()})
     print('- finished reading csv dataset')
 
     df = _sanitize_df(df)
