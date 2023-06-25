@@ -1,27 +1,20 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 def attendance_per_year(df):
     df = df[df['attendance'].notna()]
 
     means_v_score = df.groupby(['date_year'])['attendance'].mean().to_dict()
     means_v_score = {str(key): value for key, value in means_v_score.items()}
 
-    print('means_v_score: ', means_v_score)
+    x_vals = list(means_v_score.keys())
+    plt.plot(x_vals, means_v_score.values(), color='red', label='mean')
 
-    plt.plot(means_v_score.keys(), means_v_score.values(), color='red', label='mean')
-    plt.title('attendance')
-    plt.legend()
+    # plt.xticks(x_vals[::5]) # only display every nth value on the x axis
+    decades = sorted(df['date_decade'].unique())[1::2]
+    plt.xticks(np.linspace(0, len(x_vals) - 1, len(decades)), decades)  # Spread labels evenly
 
-
-def attendance_per_decade(df):
-    df = df[df['attendance'].notna()]
-
-    means_v_score = df.groupby(['date_decade'])['attendance'].mean().to_dict()
-    means_v_score = {str(key): value for key, value in means_v_score.items()}
-
-    # TODO
-    plt.scatter(means_v_score.keys(), means_v_score.values(), color='red', label='mean')
     plt.title('attendance')
     plt.legend()
 
@@ -34,5 +27,3 @@ def data_per_year(df):
 def data_per_decade(df):
     data_per_decade = df.groupby(['date_decade']).size()
     plt.plot(data_per_decade)
-
-

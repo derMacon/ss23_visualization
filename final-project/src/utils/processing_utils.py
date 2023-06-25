@@ -1,12 +1,6 @@
-import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 
 MIN_TEAM_LIFETIME_YEARS = 10
-
-
-# TODO create custom color pallet etc.
-
 
 def extract_win_stats(input_df):
     home_games_won_per_year = {}
@@ -54,3 +48,16 @@ def extract_win_stats(input_df):
         overall_games_won_per_year,\
         overall_games_won_total_sorted, \
         average_wins_per_year
+
+
+# TODO check if this function is actually needed somewhere - else delete
+def calc_years_without_data(df):
+    available_years = df['date_year'].unique()
+    start = min(available_years)
+    end = max(available_years)
+
+    total_years = np.arange(start, end + 1)
+    out = list(set(total_years) - set(available_years))
+    print('unavailable years: ', out)
+
+    return out
