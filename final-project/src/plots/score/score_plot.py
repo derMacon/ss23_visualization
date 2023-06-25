@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import cm
 
-from src.utils.processing_utils import extract_win_stats, calc_years_without_data
+from src.utils.processing_utils import extract_win_stats
 from src.utils.styling_utils import draw_rectangle
 
 from src.utils.logging_config import log
@@ -64,6 +64,8 @@ def winning_teams(df):
         min(average_wins_per_year, key=average_wins_per_year.get): 'worst average: ',
     }
 
+    log.debug('highlighted_teams: %s', highlighted_teams)
+
     for curr_team, win_stats in games_won_per_year.items():
         ax.set_xlabel('X-axis')
         ax.set_ylabel('Y-axis')
@@ -72,3 +74,8 @@ def winning_teams(df):
             ax.legend()
         else:
             ax.plot(win_stats.keys(), win_stats.values(), c=cm.gray(0.8),alpha=0.2,zorder=-1)
+
+
+def win_ratio_teams(df):
+    win_ratio_per_year = extract_win_stats(df)[2:5]
+

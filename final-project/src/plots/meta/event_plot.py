@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from src.utils.processing_utils import extract_games_per_year
+from src.utils.processing_utils import extract_game_count
 from src.utils.logging_config import log
 
 
@@ -28,6 +28,6 @@ def data_per_year(df):
 
 
 def games_per_year(df):
-    games_per_year = extract_games_per_year(df)
-    log.debug('games_per_year: %s', games_per_year)
-    plt.plot(list(games_per_year.keys()), list(games_per_year.values()))
+    data = extract_game_count(df)['games_per_year_overall']
+    log.debug('games_per_year: %s', data)
+    plt.plot(list(data.keys()), list(data.values()))
