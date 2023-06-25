@@ -4,6 +4,8 @@ import os
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from src.utils.logging_config import log
+
 GAME_LOGS_DATA_WORLD = '../datasets/retrosheets/game-logs_combined/game_logs_data-world.csv'
 GAME_LOGS_ABBREVIATIONS = '../datasets/retrosheets/game-logs_combined/TEAMABR.TXT'
 OUTPUT_DIR = '../graphs'
@@ -256,17 +258,17 @@ def _add_custom_fields(gamelog_df):
 
 
 def read_game_logs():
-    print('- started reading csv dataset')
+    log.info('started reading csv dataset')
 
     debug_row_count = os.environ.get('VIS_ROW_COUNT')
 
     if debug_row_count is not None:
-        print("- debug flag set, only reading {} entries".format(debug_row_count))
+        log.info("debug flag set, only reading %s entries", debug_row_count)
         df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()},
                          nrows=int(debug_row_count))
     else:
         df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()})
-    print('- finished reading csv dataset')
+    log.info('finished reading csv dataset')
 
     df = _sanitize_df(df)
     df = _add_custom_fields(df)
@@ -286,7 +288,7 @@ def export_graph(plotting_func, df):
     plotting_func(df)
 
     output_file = os.path.realpath(output_dir + callback_func_name)
-    print('- writing plot: ', output_file)
+    log.info('writing plot: %s', output_file)
 
     plt.savefig(output_file)
     plt.show()

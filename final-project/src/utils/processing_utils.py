@@ -2,13 +2,20 @@ import numpy as np
 
 MIN_TEAM_LIFETIME_YEARS = 10
 
+
+def extract_games_per_year(df):
+    return df.groupby('date_year').size().to_dict()
+
+
 def extract_win_stats(input_df):
     home_games_won_per_year = {}
     visiting_games_won_per_year = {}
     overall_games_won_per_year = {}
     overall_games_won_total_sorted = {}
     average_wins_per_year = {}
+    win_ratio_per_year = {}
 
+    games_per_year = extract_games_per_year(input_df)
     teams = np.unique(input_df[['v_name_translate', 'h_name_translate']].values.ravel())
     for curr_team in teams:
         curr_home_games_won = \
@@ -40,14 +47,14 @@ def extract_win_stats(input_df):
             overall_games_won_per_year[curr_team] = dict(sorted(curr_merged_wins.items()))
             overall_games_won_total_sorted[curr_team] = sum(curr_merged_wins.values())
             average_wins_per_year[curr_team] = sum(curr_merged_wins.values()) / len(curr_merged_wins)
+            win_ratio_per_year[curr_team] = average_wins_per_year[curr_team] / games_per_year
 
-        # overall_games_won_total_sorted = dict(sorted(overall_games_won_total_sorted.items(), key=lambda x: x[1]))
-
-    return home_games_won_per_year,\
-        visiting_games_won_per_year,\
-        overall_games_won_per_year,\
+    return home_games_won_per_year, \
+        visiting_games_won_per_year, \
+        overall_games_won_per_year, \
         overall_games_won_total_sorted, \
-        average_wins_per_year
+        average_wins_per_year, \
+        win_ratio_per_year
 
 
 # TODO check if this function is actually needed somewhere - else delete

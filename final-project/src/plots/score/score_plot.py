@@ -2,8 +2,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import cm
 
-from ...utils.processing_utils import extract_win_stats, calc_years_without_data
-from ...utils.styling_utils import draw_rectangle
+from src.utils.processing_utils import extract_win_stats, calc_years_without_data
+from src.utils.styling_utils import draw_rectangle
+
+from src.utils.logging_config import log
 
 
 def v_score_count(df):
