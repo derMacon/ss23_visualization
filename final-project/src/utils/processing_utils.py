@@ -116,24 +116,15 @@ def extract_win_stats(df):
 
         if len(curr_home_games_won) > 0:
             home_games_won_per_year[curr_team] = dict(sorted(curr_home_games_won.items()))
+            home_games_won_total[curr_team] = sum(curr_home_games_won.values())
 
         if len(curr_visiting_games_won) > 0:
             visiting_games_won_per_year[curr_team] = dict(sorted(curr_visiting_games_won.items()))
+            visiting_games_won_total[curr_team] = sum(curr_visiting_games_won.values())
 
         if len(curr_merged_wins) > 0:
             overall_games_won_per_year[curr_team] = dict(sorted(curr_merged_wins.items()))
-
-
-        if len(game_count_stats['home_games_per_year_per_team'][curr_team]):
-            home_games_won_per_year[curr_team].update(dict(sorted(curr_home_games_won.items())))
-
-        if len(game_count_stats['visiting_games_per_year_per_team'][curr_team]):
-            visiting_games_won_total[curr_team] = sum(curr_visiting_games_won.values())
-
-        if len(game_count_stats['games_per_year_per_team'][curr_team]):
             overall_games_won_total[curr_team] = sum(curr_merged_wins.values())
-
-
 
     return {
         'home_games_won_per_year': home_games_won_per_year,
@@ -168,24 +159,26 @@ def calc_win_averages(df):
     log.debug('games_per_year_per_team: %s', game_count_stats['games_per_year_per_team'])
 
     for curr_team in game_count_stats['games_total_per_team'].keys():
-        total_won_games = win_stats['overall_games_won_total'][curr_team]
-        total_played_games = game_count_stats['games_total_per_team'][curr_team]
-        win_avg_total_per_team[curr_team] = total_won_games / total_played_games
 
-        yearly_won_games = win_stats['overall_games_won_per_year'][curr_team]
-        games_per_year = game_count_stats['games_per_year_per_team'][curr_team]
-        win_avg_per_year_per_team[curr_team] = merge_dicts_divide(yearly_won_games, games_per_year)
+        if curr_team in win_stats['overall_games_won_total']:
+            total_won_games = win_stats['overall_games_won_total'][curr_team]
+            total_played_games = game_count_stats['games_total_per_team'][curr_team]
+            win_avg_total_per_team[curr_team] = total_won_games / total_played_games
 
-        visiting_won_games = win_stats['visiting_games_won_per_year'][curr_team]
-        visiting_games_per_year = game_count_stats['visiting_games_per_year_per_team'][curr_team]
-        visiting_games_win_avg_per_year_per_team[curr_team] = merge_dicts_divide(visiting_won_games,
-                                                                                 visiting_games_per_year)
+        if curr_team in win_stats['overall_games_won_per_year']:
+            yearly_won_games = win_stats['overall_games_won_per_year'][curr_team]
+            games_per_year = game_count_stats['games_per_year_per_team'][curr_team]
+            win_avg_per_year_per_team[curr_team] = merge_dicts_divide(yearly_won_games, games_per_year)
 
-        home_games_per_year = game_count_stats['home_games_per_year_per_team'][curr_team]
-        if home_games_per_year > 0:
+        if curr_team in win_stats['visiting_games_won_per_year']:
+            visiting_won_games = win_stats['visiting_games_won_per_year'][curr_team]
+            visiting_games_per_year = game_count_stats['visiting_games_per_year_per_team'][curr_team]
+            visiting_games_win_avg_per_year_per_team[curr_team] = merge_dicts_divide(visiting_won_games,
+                                                                                     visiting_games_per_year)
+        if curr_team in win_stats['home_games_won_per_year']:
             home_won_games = win_stats['home_games_won_per_year'][curr_team]
-            home_games_win_avg_per_year_per_team[curr_team] = merge_dicts_divide(home_won_games,
-                                                                                 home_games_per_year)
+            home_games_per_year = game_count_stats['home_games_per_year_per_team'][curr_team]
+            home_games_win_avg_per_year_per_team[curr_team] = merge_dicts_divide(home_won_games, home_games_per_year)
 
     return {
         'win_avg_per_year_per_team': win_avg_per_year_per_team,

@@ -2,9 +2,8 @@ import unittest
 
 import pandas as pd
 
-from src.utils.processing_utils import extract_game_count
-from src.utils.processing_utils import extract_win_stats
-from src.utils.processing_utils import calc_win_averages
+from src.utils.processing_utils import *
+from src.utils.datastructure_utils import *
 from src.utils.logging_config import log
 
 
@@ -227,38 +226,37 @@ class ModuleTestCase(unittest.TestCase):
 
         exp_win_avg_per_year_per_team = {
             'team-a': {1884: 0.5},
-            'team-b': {1884: 1, 1885: 1},
-            'team-c': {1884: 0, 1885: 0},
-            'team-d': {1885: 0.5, 1886: 1},
-            'team-e': {1886: 0, 1886: 0},
-            'team-f': {1886: 0},
+            'team-b': {1884: 1.0, 1885: 1.0},
+            'team-c': {1884: 0.0, 1885: 0.0},
+            'team-d': {1886: 0.5, 1887: 1.0},
+            'team-e': {1886: 1.0, 1887: 0.0},
+            'team-f': {1886: 0.0},
         }
 
         exp_win_avg_total_per_team = {
             'team-a': 0.5,
-            'team-b': 1,
-            'team-c': 0,
+            'team-b': 1.0,
+            'team-c': 0.0,
             'team-d': 0.66,
             'team-e': 0.5,
-            'team-f': 0,
+            'team-f': 0.0,
         }
 
         exp_home_games_win_avg_per_year_per_team = {
-            'team-a': {1884: 0},
-            'team-b': {1885: 1},
-            'team-c': {1884: 0},
-            'team-d': {1886: 1},
-            'team-e': {1886: 1, 1887: 0},
-            'team-f': {1886: 0},
+            'team-a': {1884: 0.0},
+            'team-b': {1885: 1.0},
+            'team-c': {1884: 0.0},
+            'team-d': {1887: 1.0},
+            'team-e': {1886: 1.0},
+            'team-f': {1886: 0.0},
         }
 
         exp_visiting_games_win_avg_per_year_per_team = {
-            'team-a': {1884: 1},
-            'team-b': {1884: 1},
-            'team-c': {1885: 0},
+            'team-a': {1884: 1.0},
+            'team-b': {1884: 1.0},
+            'team-c': {1885: 0.0},
             'team-d': {1886: 0.5},
-            'team-e': {1887: 0},
-            'team-f': {1886: 0},
+            'team-e': {1887: 0.0},
         }
 
         log.debug('win_avg_per_year_per_team: %s', win_averages['win_avg_per_year_per_team'])
@@ -267,7 +265,7 @@ class ModuleTestCase(unittest.TestCase):
 
         log.debug('win_avg_total_per_team: %s', win_averages['win_avg_total_per_team'])
         log.debug('exp_win_avg_total_per_team: %s', exp_win_avg_total_per_team)
-        self.assertEqual(win_averages['win_avg_total_per_team'], exp_win_avg_total_per_team)
+        self.assertTrue(compare_dicts_with_delta(win_averages['win_avg_total_per_team'], exp_win_avg_total_per_team, 0.01))
 
         log.debug('home_games_win_avg_per_year_per_team: %s', win_averages['home_games_win_avg_per_year_per_team'])
         log.debug('exp_home_games_win_avg_per_year_per_team: %s', exp_home_games_win_avg_per_year_per_team)

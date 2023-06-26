@@ -42,3 +42,16 @@ def merge_dicts_nested_add(fst_dict, snd_dict):
     return out
 
 
+def compare_dicts_with_delta(dict1, dict2, delta):
+    # Check if the dictionaries have the same keys
+    if set(dict1.keys()) != set(dict2.keys()):
+        return False
+
+    # Compare the values with the specified delta
+    for key in dict1:
+        value1 = dict1[key]
+        value2 = dict2[key]
+        if abs(value1 - value2) > delta:
+            return False
+
+    return True
