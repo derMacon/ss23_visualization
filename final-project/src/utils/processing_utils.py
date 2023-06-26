@@ -39,8 +39,7 @@ def extract_game_count(df):
                 .size() \
                 .to_dict()
 
-        games_per_year_per_team[curr_team] = {element: 0 for element in years}
-        games_per_year_per_team[curr_team].update(curr_team_games)
+        games_per_year_per_team[curr_team] = curr_team_games
         games_total_per_team[curr_team] = sum(curr_team_games.values())
 
     return {
@@ -95,18 +94,19 @@ def extract_win_stats(df):
         curr_merged_wins = {key: curr_home_games_won.get(key, 0) + curr_visiting_games_won.get(key, 0)
                             for key in set(curr_home_games_won) | set(curr_visiting_games_won)}
 
-        home_games_won_per_year[curr_team] = {element: 0 for element in years}
-        visiting_games_won_per_year[curr_team] = {element: 0 for element in years}
-        overall_games_won_per_year[curr_team] = {element: 0 for element in years}
+        # home_games_won_per_year[curr_team] = {element: 0 for element in years}
+        # visiting_games_won_per_year[curr_team] = {element: 0 for element in years}
+        # overall_games_won_per_year[curr_team] = {element: 0 for element in years}
 
         if len(curr_home_games_won) > 0:
-            home_games_won_per_year[curr_team].update(dict(sorted(curr_home_games_won.items())))
+            home_games_won_per_year[curr_team] = dict(sorted(curr_home_games_won.items()))
+            # home_games_won_per_year[curr_team].update(dict(sorted(curr_home_games_won.items())))
 
         if len(curr_visiting_games_won) > 0:
-            visiting_games_won_per_year[curr_team].update(dict(sorted(curr_visiting_games_won.items())))
+            visiting_games_won_per_year[curr_team] = dict(sorted(curr_visiting_games_won.items()))
 
         if len(curr_merged_wins) > 0:
-            overall_games_won_per_year[curr_team].update(dict(sorted(curr_merged_wins.items())))
+            overall_games_won_per_year[curr_team] = dict(sorted(curr_merged_wins.items()))
 
         home_games_won_total[curr_team] = sum(curr_home_games_won.values())
         visiting_games_won_total[curr_team] = sum(curr_visiting_games_won.values())
@@ -137,6 +137,8 @@ def calc_win_averages(df):
     win_avg_total_per_team = {}
 
     log.debug('games per year: %s', game_count_stats['games_per_year_per_team'])
+    log.debug('overall_games_won_per_year: %s', win_stats['overall_games_won_per_year'])
+    log.debug('games_per_year_per_team: %s', game_count_stats['games_per_year_per_team'])
 
     for curr_team in game_count_stats['games_total_per_team'].keys():
         total_won_games = win_stats['overall_games_won_total'][curr_team]

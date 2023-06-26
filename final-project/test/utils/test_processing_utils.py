@@ -18,14 +18,17 @@ class ModuleTestCase(unittest.TestCase):
         }
 
         game_count_stats = extract_game_count(pd.DataFrame(test_input))
+        log.debug('games_per_year_per_team: %s', game_count_stats['games_per_year_per_team'])
+        log.debug('games_total_per_team: %s', game_count_stats['games_total_per_team'])
+        log.debug('games_per_year_overall: %s', game_count_stats['games_per_year_overall'])
+        log.debug('games_total_overall: %s', game_count_stats['games_total_overall'])
 
-        # TODO maybe leave out years, where team did not play?
         exp_games_per_year_per_team = {
-            'team-a': {1884: 1, 1885: 0, 1886: 0},
-            'team-b': {1884: 1, 1885: 1, 1886: 0},
-            'team-c': {1884: 2, 1885: 1, 1886: 0},
-            'team-d': {1884: 0, 1885: 0, 1886: 1},
-            'team-e': {1884: 0, 1885: 0, 1886: 1},
+            'team-a': {1884: 1},
+            'team-b': {1884: 1, 1885: 1},
+            'team-c': {1884: 2, 1885: 1},
+            'team-d': {1886: 1},
+            'team-e': {1886: 1},
         }
 
         exp_games_total_per_team = {
@@ -62,10 +65,17 @@ class ModuleTestCase(unittest.TestCase):
 
         game_count_stats = extract_win_stats(pd.DataFrame(test_input))
 
+        log.debug('home_games_won_per_year: %s', game_count_stats['home_games_won_per_year'])
+        log.debug('home_games_won_total: %s', game_count_stats['home_games_won_total'])
+        log.debug('visiting_games_won_per_year: %s', game_count_stats['visiting_games_won_per_year'])
+        log.debug('visiting_games_won_total: %s', game_count_stats['visiting_games_won_total'])
+        log.debug('overall_games_won_per_year: %s', game_count_stats['overall_games_won_per_year'])
+        log.debug('overall_games_won_total: %s', game_count_stats['overall_games_won_total'])
+
         exp_home_games_won_per_year = {
-            'team-a': {1884: 0, 1885: 0},
-            'team-b': {1884: 0, 1885: 1},
-            'team-c': {1884: 0, 1885: 0},
+            'team-a': {1884: 0},
+            'team-b': {1885: 1},
+            'team-c': {1884: 0},
         }
 
         exp_home_games_won_total = {
@@ -75,9 +85,9 @@ class ModuleTestCase(unittest.TestCase):
         }
 
         exp_visiting_games_won_per_year = {
-            'team-a': {1884: 1, 1885: 0},
-            'team-b': {1884: 2, 1885: 0},
-            'team-c': {1884: 0, 1885: 0},
+            'team-a': {1884: 1},
+            'team-b': {1884: 2},
+            'team-c': {1885: 0},
         }
 
         exp_visiting_games_won_total = {
@@ -87,7 +97,7 @@ class ModuleTestCase(unittest.TestCase):
         }
 
         exp_overall_games_won_per_year = {
-            'team-a': {1884: 1, 1885: 0},
+            'team-a': {1884: 1},
             'team-b': {1884: 2, 1885: 1},
             'team-c': {1884: 0, 1885: 0},
         }
