@@ -18,10 +18,7 @@ class ModuleTestCase(unittest.TestCase):
         }
 
         game_count_stats = extract_game_count(pd.DataFrame(test_input))
-        log.debug('games_per_year_per_team: %s', game_count_stats['games_per_year_per_team'])
-        log.debug('games_total_per_team: %s', game_count_stats['games_total_per_team'])
-        log.debug('games_per_year_overall: %s', game_count_stats['games_per_year_overall'])
-        log.debug('games_total_overall: %s', game_count_stats['games_total_overall'])
+
 
         exp_games_per_year_per_team = {
             'team-a': {1884: 1},
@@ -47,12 +44,48 @@ class ModuleTestCase(unittest.TestCase):
 
         exp_games_total_overall = 4
 
+        exp_home_games_per_year_per_team = {
+            'team-a': {},
+            'team-b': {1885: 1},
+            'team-c': {1884: 2},
+            'team-d': {},
+            'team-e': {1886: 1},
+        }
+
+        exp_visiting_games_per_year_per_team = {
+            'team-a': {1884: 1},
+            'team-b': {1884: 1},
+            'team-c': {1885: 1},
+            'team-d': {1886: 1},
+            'team-e': {},
+        }
+
+        log.debug('games_per_year_per_team: %s', game_count_stats['games_per_year_per_team'])
+        log.debug('exp_games_per_year_per_team: %s', exp_games_per_year_per_team)
         self.assertEqual(game_count_stats['games_per_year_per_team'], exp_games_per_year_per_team)
+
+        log.debug('games_total_per_team: %s', game_count_stats['games_total_per_team'])
+        log.debug('exp_games_total_per_team: %s', exp_games_total_per_team)
         self.assertEqual(game_count_stats['games_total_per_team'], exp_games_total_per_team)
+
+        log.debug('games_per_year_overall: %s', game_count_stats['games_per_year_overall'])
+        log.debug('exp_games_per_year_overall: %s', exp_games_per_year_overall)
         self.assertEqual(game_count_stats['games_per_year_overall'], exp_games_per_year_overall)
+
+        log.debug('games_total_overall: %s', game_count_stats['games_total_overall'])
+        log.debug('exp_games_total_overall: %s', exp_games_total_overall)
         self.assertEqual(game_count_stats['games_total_overall'], exp_games_total_overall)
 
-    def test_valid_extract_win_stats(self):
+        log.debug('home_games_per_year_per_team: %s', game_count_stats['home_games_per_year_per_team'])
+        log.debug('exp_home_games_per_year_per_team: %s', exp_home_games_per_year_per_team)
+        self.assertEqual(game_count_stats['home_games_per_year_per_team'], exp_home_games_per_year_per_team)
+
+        log.debug('visiting_games_per_year_per_team: %s', game_count_stats['visiting_games_per_year_per_team'])
+        log.debug('exp_visiting_games_per_year_per_team: %s', exp_visiting_games_per_year_per_team)
+        self.assertEqual(game_count_stats['visiting_games_per_year_per_team'], exp_visiting_games_per_year_per_team)
+
+
+    def test_valid_extract_win_stats1(self):
         test_input = {
             'date_year': [1884, 1884, 1884, 1885],
             'v_name_translate': ['team-a', 'team-b', 'team-b', 'team-c'],
@@ -115,35 +148,135 @@ class ModuleTestCase(unittest.TestCase):
         self.assertEqual(game_count_stats['overall_games_won_per_year'], exp_overall_games_won_per_year)
         self.assertEqual(game_count_stats['overall_games_won_total'], exp_overall_games_won_total)
 
+    def test_valid_extract_win_stats2(self):
+        test_input = {
+            'date_year': [1884],
+            'v_name_translate': ['team-a'],
+            'h_name_translate': ['team-b'],
+            'v_score': [3],
+            'h_score': [2],
+            'date_v_duration': [30],
+            'date_h_duration': [30],
+        }
+
+        game_count_stats = extract_win_stats(pd.DataFrame(test_input))
+
+
+        exp_home_games_won_per_year = {
+            'team-b': {1884: 0},
+        }
+
+        exp_home_games_won_total = {
+            'team-b': 0,
+        }
+
+        exp_visiting_games_won_per_year = {
+            'team-a': {1884: 1},
+        }
+
+        exp_visiting_games_won_total = {
+            'team-a': 1,
+        }
+
+        exp_overall_games_won_per_year = {
+            'team-a': {1884: 1},
+            'team-b': {1884: 0},
+        }
+
+        exp_overall_games_won_total = {
+            'team-a': 1,
+            'team-b': 0,
+        }
+
+        log.debug('home_games_won_per_year: %s', game_count_stats['home_games_won_per_year'])
+        log.debug('exp_home_games_won_per_year: %s', exp_home_games_won_per_year)
+        self.assertEqual(game_count_stats['home_games_won_per_year'], exp_home_games_won_per_year)
+
+        log.debug('home_games_won_total: %s', game_count_stats['home_games_won_total'])
+        log.debug('exp_home_games_won_total: %s', exp_home_games_won_total)
+        self.assertEqual(game_count_stats['home_games_won_total'], exp_home_games_won_total)
+
+        log.debug('visiting_games_won_per_year: %s', game_count_stats['visiting_games_won_per_year'])
+        log.debug('exp_visiting_games_won_per_year: %s', exp_visiting_games_won_per_year)
+        self.assertEqual(game_count_stats['visiting_games_won_per_year'], exp_visiting_games_won_per_year)
+
+        log.debug('visiting_games_won_total: %s', game_count_stats['visiting_games_won_total'])
+        log.debug('exp_visiting_games_won_total: %s', exp_visiting_games_won_total)
+        self.assertEqual(game_count_stats['visiting_games_won_total'], exp_visiting_games_won_total)
+
+        log.debug('overall_games_won_per_year: %s', game_count_stats['overall_games_won_per_year'])
+        log.debug('exp_overall_games_won_per_year: %s', exp_overall_games_won_per_year)
+        self.assertEqual(game_count_stats['overall_games_won_per_year'], exp_overall_games_won_per_year)
+
+        log.debug('overall_games_won_total: %s', game_count_stats['overall_games_won_total'])
+        log.debug('exp_overall_games_won_total: %s', exp_overall_games_won_total)
+        self.assertEqual(game_count_stats['overall_games_won_total'], exp_overall_games_won_total)
+
     def test_valid_calc_win_averages(self):
         test_input = {
-            'date_year': [1884, 1884, 1884, 1885],
-            'v_name_translate': ['team-a', 'team-b', 'team-b', 'team-c'],
-            'h_name_translate': ['team-c', 'team-c', 'team-a', 'team-b'],
-            'v_score': [3, 1, 9, 2],
-            'h_score': [2, 0, 4, 5],
-            'date_v_duration': [30, 30, 30, 30],
-            'date_h_duration': [30, 30, 30, 30],
+            'date_year': [1884, 1884, 1884, 1885, 1886, 1886, 1887],
+            'v_name_translate': ['team-a', 'team-b', 'team-b', 'team-c', 'team-d', 'team-d', 'team-e'],
+            'h_name_translate': ['team-c', 'team-c', 'team-a', 'team-b', 'team-e', 'team-f', 'team-d'],
+            'v_score': [3, 1, 9, 2, 0, 1, 0],
+            'h_score': [2, 0, 4, 5, 1, 0, 1],
+            'date_v_duration': [30, 30, 30, 30, 30, 30, 30],
+            'date_h_duration': [30, 30, 30, 30, 30, 30, 30],
         }
 
         win_averages = calc_win_averages(pd.DataFrame(test_input))
-        log.debug('win_avg_per_year_per_team: %s', win_averages['win_avg_per_year_per_team'])
-        log.debug('win_avg_total_per_team: %s', win_averages['win_avg_total_per_team'])
 
         exp_win_avg_per_year_per_team = {
             'team-a': {1884: 0.5},
             'team-b': {1884: 1, 1885: 1},
             'team-c': {1884: 0, 1885: 0},
+            'team-d': {1885: 0.5, 1886: 1},
+            'team-e': {1886: 0, 1886: 0},
+            'team-f': {1886: 0},
         }
 
         exp_win_avg_total_per_team = {
             'team-a': 0.5,
             'team-b': 1,
             'team-c': 0,
+            'team-d': 0.66,
+            'team-e': 0.5,
+            'team-f': 0,
         }
 
+        exp_home_games_win_avg_per_year_per_team = {
+            'team-a': {1884: 0},
+            'team-b': {1885: 1},
+            'team-c': {1884: 0},
+            'team-d': {1886: 1},
+            'team-e': {1886: 1, 1887: 0},
+            'team-f': {1886: 0},
+        }
+
+        exp_visiting_games_win_avg_per_year_per_team = {
+            'team-a': {1884: 1},
+            'team-b': {1884: 1},
+            'team-c': {1885: 0},
+            'team-d': {1886: 0.5},
+            'team-e': {1887: 0},
+            'team-f': {1886: 0},
+        }
+
+        log.debug('win_avg_per_year_per_team: %s', win_averages['win_avg_per_year_per_team'])
+        log.debug('exp_win_avg_per_year_per_team: %s', exp_win_avg_per_year_per_team)
         self.assertEqual(win_averages['win_avg_per_year_per_team'], exp_win_avg_per_year_per_team)
+
+        log.debug('win_avg_total_per_team: %s', win_averages['win_avg_total_per_team'])
+        log.debug('exp_win_avg_total_per_team: %s', exp_win_avg_total_per_team)
         self.assertEqual(win_averages['win_avg_total_per_team'], exp_win_avg_total_per_team)
+
+        log.debug('home_games_win_avg_per_year_per_team: %s', win_averages['home_games_win_avg_per_year_per_team'])
+        log.debug('exp_home_games_win_avg_per_year_per_team: %s', exp_home_games_win_avg_per_year_per_team)
+        self.assertEqual(win_averages['home_games_win_avg_per_year_per_team'], exp_home_games_win_avg_per_year_per_team)
+
+        log.debug('visiting_games_win_avg_per_year_per_team: %s', win_averages['visiting_games_win_avg_per_year_per_team'])
+        log.debug('exp_visiting_games_win_avg_per_year_per_team: %s', exp_visiting_games_win_avg_per_year_per_team)
+        self.assertEqual(win_averages['visiting_games_win_avg_per_year_per_team'], exp_visiting_games_win_avg_per_year_per_team)
+
 
 
 if __name__ == '__main__':
