@@ -115,5 +115,5 @@ print('99 percent: i == ', i)
 #     vList=np.linspace(-1,1,num=7)
 #     dataRe=np.einsum(eigvec[i],[0],vList*scale,[1],[1,0])
 #     for v,y in zip(vList,dataRe):
-#         plt.plot(x,y,c=cm.coolwarm(0.5*v+0.5))
+#         plt.plot(x,y+mean,c=cm.coolwarm(0.5*v+0.5))
 # plt.show()
