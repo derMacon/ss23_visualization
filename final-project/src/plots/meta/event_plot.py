@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 import numpy as np
 
 from src.utils.processing_utils import extract_game_count
@@ -31,3 +32,22 @@ def games_per_year_overall(df):
     data = extract_game_count(df)['games_per_year_overall']
     log.debug('games_per_year: %s', data)
     plt.plot(list(data.keys()), list(data.values()))
+
+
+def games_per_year_per_team(df):
+    data = extract_game_count(df)
+    games_per_year_per_team = data['games_per_year_per_team']
+    log.debug('games_per_year_per_team: %s', games_per_year_per_team)
+
+    fig, ax = plt.subplots()
+    for curr_team, count_per_year in games_per_year_per_team.items():
+        ax.plot(count_per_year.keys(), count_per_year.values(), c=cm.gray(0.7), alpha=0.2, label=curr_team)
+
+    games_per_year_avg = data['games_per_year_avg']
+    log.debug('games_per_year_overall: %s', data)
+
+    # log.debug('min year: %s', min(games_per_year_avg, key=games_per_year_avg.get))
+    # log.debug('mins: %s', dict(sorted(games_per_year_avg.items(), key=lambda x: x[1])))
+    log.debug('games_per_year_avg: %s', games_per_year_avg)
+    ax.plot(games_per_year_avg.keys(), games_per_year_avg.values())
+

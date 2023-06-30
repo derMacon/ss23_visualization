@@ -11,4 +11,5 @@ df = read_game_logs()
 #
 # export_graph(event_plot.data_per_year, df)
 # export_graph(event_plot.attendance_per_year, df)
-export_graph(event_plot.games_per_year_overall, df)
+# export_graph(event_plot.games_per_year_overall, df)
+export_graph(event_plot.games_per_year_per_team, df)

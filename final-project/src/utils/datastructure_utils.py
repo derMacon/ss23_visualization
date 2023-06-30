@@ -42,6 +42,18 @@ def merge_dicts_nested_add(fst_dict, snd_dict):
 
     return out
 
+def merge_dicts_append(fst_dict, snd_dict):
+    out = copy.deepcopy(fst_dict)
+
+    for snd_key, snd_val in snd_dict.items():
+        if out.get(snd_key) is not None:
+            # out[snd_key] = merge_dicts_add(out[snd_key], snd_val)
+            out[snd_key].append(snd_val)
+        else:
+            out[snd_key] = [snd_val]
+
+    return out
+
 
 def compare_dicts_with_delta(dict1, dict2, delta):
     # Check if the dictionaries have the same keys

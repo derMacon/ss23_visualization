@@ -18,6 +18,7 @@ def extract_game_count(df, min_lifetime=MIN_TEAM_LIFETIME_YEARS):
     """
     extracting game count stats\n
     - games_per_year_per_team\n
+    - games_per_year_avg\n
     - games_total_per_team\n
     - games_per_year_overall\n
     - games_total_overall\n
@@ -30,6 +31,7 @@ def extract_game_count(df, min_lifetime=MIN_TEAM_LIFETIME_YEARS):
     games_total_overall = df.shape[0]
 
     games_per_year_per_team = {}
+    games_per_year_avg = {}
     games_total_per_team = {}
 
     home_games_per_year_per_team = {}
@@ -54,11 +56,19 @@ def extract_game_count(df, min_lifetime=MIN_TEAM_LIFETIME_YEARS):
 
         curr_team_games = merge_dicts_nested_add(home_games_per_year_per_team, visiting_games_per_year_per_team)
 
-        games_per_year_per_team[curr_team] = curr_team_games[curr_team]
+        games_per_year_per_team[curr_team] = dict(sorted(curr_team_games[curr_team].items()))
+        games_per_year_avg = merge_dicts_append(games_per_year_avg, curr_team_games[curr_team])
+
         games_total_per_team[curr_team] = sum(curr_team_games[curr_team].values())
+
+    for curr_year in games_per_year_avg:
+        games_per_year_avg[curr_year] = np.mean(np.array(games_per_year_avg[curr_year]))
+    
+    games_per_year_avg = dict(sorted(games_per_year_avg.items()))
 
     return {
         'games_per_year_per_team': games_per_year_per_team,
+        'games_per_year_avg': games_per_year_avg,
         'games_total_per_team': games_total_per_team,
         'games_per_year_overall': games_per_year_overall,
         'games_total_overall': games_total_overall,
