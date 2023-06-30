@@ -15,9 +15,10 @@ class ModuleTestCase(unittest.TestCase):
             'h_name_translate': ['team-b'],
             'date_h_duration': [30],
             'date_v_duration': [30],
+            'date_year': 2000
         }
 
-        act_teams = set(get_available_teams(pd.DataFrame(test_input)))
+        act_teams = set(get_available_teams(pd.DataFrame(test_input), min_lifetime=-1, min_games_played_per_year=-1))
         exp_teams = set(['team-a', 'team-b'])
 
         log.debug('act_teams: %s', act_teams)
@@ -30,9 +31,10 @@ class ModuleTestCase(unittest.TestCase):
             'v_name_translate': ['team-b'],
             'date_h_duration': [30],
             'date_v_duration': [0],
+            'date_year': 2000
         }
 
-        act_teams = set(get_available_teams(pd.DataFrame(test_input), 30))
+        act_teams = set(get_available_teams(pd.DataFrame(test_input), min_lifetime=30, min_games_played_per_year=-1))
         exp_teams = set(['team-a'])
 
         log.debug('act_teams: %s', act_teams)
@@ -44,6 +46,8 @@ class ModuleTestCase(unittest.TestCase):
             'date_year': [1884, 1884, 1885, 1886],
             'v_name_translate': ['team-a', 'team-b', 'team-c', 'team-d'],
             'h_name_translate': ['team-c', 'team-c', 'team-b', 'team-e'],
+            'date_v_duration': [30, 30, 30, 30],
+            'date_h_duration': [30, 30, 30, 30],
         }
 
         game_count_stats = extract_game_count(pd.DataFrame(test_input))
@@ -122,6 +126,8 @@ class ModuleTestCase(unittest.TestCase):
             'date_v_duration': [30, 30, 30, 30],
             'date_h_duration': [30, 30, 30, 30],
         }
+        debug_min_games_played_per_year(-1)
+        debug_set_min_team_lifetime_years(-1)
 
         game_count_stats = extract_win_stats(pd.DataFrame(test_input))
 
@@ -168,12 +174,12 @@ class ModuleTestCase(unittest.TestCase):
             'team-c': 0,
         }
 
-        self.assertEqual(game_count_stats['home_games_won_per_year'], exp_home_games_won_per_year)
-        self.assertEqual(game_count_stats['home_games_won_total'], exp_home_games_won_total)
-        self.assertEqual(game_count_stats['visiting_games_won_per_year'], exp_visiting_games_won_per_year)
-        self.assertEqual(game_count_stats['visiting_games_won_total'], exp_visiting_games_won_total)
-        self.assertEqual(game_count_stats['overall_games_won_per_year'], exp_overall_games_won_per_year)
-        self.assertEqual(game_count_stats['overall_games_won_total'], exp_overall_games_won_total)
+        self.assertEqual(exp_home_games_won_per_year, game_count_stats['home_games_won_per_year'])
+        self.assertEqual(exp_home_games_won_total, game_count_stats['home_games_won_total'])
+        self.assertEqual(exp_visiting_games_won_per_year, game_count_stats['visiting_games_won_per_year'])
+        self.assertEqual(exp_visiting_games_won_total, game_count_stats['visiting_games_won_total'])
+        self.assertEqual(exp_overall_games_won_per_year, game_count_stats['overall_games_won_per_year'])
+        self.assertEqual(exp_overall_games_won_total, game_count_stats['overall_games_won_total'])
 
     def test_valid_extract_win_stats2(self):
         test_input = {

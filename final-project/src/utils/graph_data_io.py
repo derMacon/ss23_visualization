@@ -10,6 +10,8 @@ GAME_LOGS_DATA_WORLD = '../datasets/retrosheets/game-logs_combined/game_logs_dat
 GAME_LOGS_ABBREVIATIONS = '../datasets/retrosheets/game-logs_combined/TEAMABR.TXT'
 OUTPUT_DIR = '../graphs'
 
+START_YEAR = 1900
+
 _dtypeDict = {
     'date': str,
     'number_of_game': np.uint32,
@@ -196,8 +198,14 @@ def _empty_flags_for_empty_cells(gamelog_df):
     return gamelog_df
 
 
+def _remove_first_incomplete_years(gameslog_df):
+    # return gameslog_df[int(gameslog_df['date']) >= 18900000]
+    return gameslog_df[gameslog_df['date'].apply(lambda x: int(x[:4])) >= START_YEAR]
+    # return gameslog_df[gameslog_df['date_year'] >= 1890]
+
 def _sanitize_df(gamelog_df):
     gamelog_df = _empty_flags_for_empty_cells(gamelog_df)
+    gamelog_df = _remove_first_incomplete_years(gamelog_df)
     return gamelog_df
 
 

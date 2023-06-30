@@ -54,6 +54,9 @@ def vh_score_comparison(df):
 
 
 def winning_teams(df):
+    bug = df[df['v_name_translate'] == 'Washington - Nationals']
+    bug2 = df[df['h_name_translate'] == 'Washington - Nationals']
+
     win_stats = extract_win_stats(df)
     # win_avg = calc_win_averages(df)
 

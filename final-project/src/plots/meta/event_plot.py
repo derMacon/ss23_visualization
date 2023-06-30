@@ -27,7 +27,7 @@ def data_per_year(df):
     plt.plot(data_per_year)
 
 
-def games_per_year(df):
+def games_per_year_overall(df):
     data = extract_game_count(df)['games_per_year_overall']
     log.debug('games_per_year: %s', data)
     plt.plot(list(data.keys()), list(data.values()))

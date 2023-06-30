@@ -3,15 +3,18 @@ from src.utils.datastructure_utils import *
 from src.utils.logging_config import log
 
 MIN_TEAM_LIFETIME_YEARS = 10
+MIN_GAMES_PLAYED_PER_YEAR = 15
 
 
-def get_available_teams(df, min_lifetime=-1):
-    h_teams = np.array(df[(df['date_h_duration'] >= min_lifetime)]['h_name_translate'])
-    v_teams = np.array(df[(df['date_v_duration'] >= min_lifetime)]['v_name_translate'])
-    return np.unique(np.concatenate((h_teams, v_teams)))
+def debug_set_min_team_lifetime_years(value):
+    MIN_TEAM_LIFETIME_YEARS = value
 
 
-def extract_game_count(df):
+def debug_min_games_played_per_year(value):
+    MIN_GAMES_PLAYED_PER_YEAR = value
+
+
+def extract_game_count(df, min_lifetime=MIN_TEAM_LIFETIME_YEARS):
     """
     extracting game count stats\n
     - games_per_year_per_team\n
@@ -32,7 +35,10 @@ def extract_game_count(df):
     home_games_per_year_per_team = {}
     visiting_games_per_year_per_team = {}
 
-    teams = get_available_teams(df)
+    h_teams = np.array(df[(df['date_h_duration'] >= min_lifetime)]['h_name_translate'])
+    v_teams = np.array(df[(df['date_v_duration'] >= min_lifetime)]['v_name_translate'])
+    teams = np.unique(np.concatenate((h_teams, v_teams)))
+
     for curr_team in teams:
         home_games_per_year_per_team[curr_team] = \
             df[(df['h_name_translate'] == curr_team)] \
@@ -61,6 +67,23 @@ def extract_game_count(df):
     }
 
 
+def get_available_teams(df, min_lifetime=MIN_TEAM_LIFETIME_YEARS, min_games_played_per_year=MIN_GAMES_PLAYED_PER_YEAR):
+    game_count_stats = extract_game_count(df, min_lifetime=min_lifetime)
+    games_per_year_per_team = game_count_stats['games_per_year_per_team']
+
+    teams_playing_min_count = []
+    for curr_team, games_per_year in games_per_year_per_team.items():
+        min_year = min(games_per_year, key=games_per_year.get)
+        min_game_count = games_per_year[min_year]
+
+        # if min_game_count >= min_games_played_per_year:
+        #     log.debug('min in if: %s - %s, %s', curr_team, min_game_count, min_games_played_per_year)
+        teams_playing_min_count.append(curr_team)
+
+    log.debug('teams_playing_min_count: %s', teams_playing_min_count)
+    return teams_playing_min_count
+
+
 def extract_win_stats(df):
     """
     extracting win stats\n
@@ -82,7 +105,7 @@ def extract_win_stats(df):
     overall_games_won_per_year = {}
     overall_games_won_total = {}
 
-    teams = get_available_teams(df, MIN_TEAM_LIFETIME_YEARS)
+    teams = get_available_teams(df)
     game_count_stats = extract_game_count(df)
 
     for curr_team in teams:
