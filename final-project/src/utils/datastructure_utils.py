@@ -1,4 +1,5 @@
 import copy
+from src.utils.logging_config import log
 
 
 def merge_dicts_divide(fst_dict, snd_dict):
@@ -52,6 +53,30 @@ def compare_dicts_with_delta(dict1, dict2, delta):
         value1 = dict1[key]
         value2 = dict2[key]
         if abs(value1 - value2) > delta:
+            log.debug("dicts unequal at values: %s - %s", value1, value2)
             return False
 
     return True
+
+def compare_nested_dicts_with_delta(dict1, dict2, delta):
+    # Check if the dictionaries have the same keys
+    if set(dict1.keys()) != set(dict2.keys()):
+        return False
+
+    # Compare the values with the specified delta
+    for key in dict1:
+        value1 = dict1[key]
+        value2 = dict2[key]
+        if not compare_dicts_with_delta(value1, value2, delta):
+            return False
+
+    return True
+
+
+def min_nested_dict(dict_input):
+    tmp = {}
+    for dict_key, dict_value in dict_input.items():
+        min_key = min(dict_value, key=dict_value.get)
+        min_value = min(dict_value, key=dict_value.get)
+        tmp[dict_key] = {min_key, min_value}
+    return min(tmp, key=tmp.get)

@@ -5,8 +5,10 @@ from src.utils.logging_config import log
 MIN_TEAM_LIFETIME_YEARS = 10
 
 
-def get_available_teams(df):
-    return np.unique(df[['v_name_translate', 'h_name_translate']].values.ravel())
+def get_available_teams(df, min_lifetime=-1):
+    h_teams = np.array(df[(df['date_h_duration'] >= min_lifetime)]['h_name_translate'])
+    v_teams = np.array(df[(df['date_v_duration'] >= min_lifetime)]['v_name_translate'])
+    return np.unique(np.concatenate((h_teams, v_teams)))
 
 
 def extract_game_count(df):
@@ -80,7 +82,7 @@ def extract_win_stats(df):
     overall_games_won_per_year = {}
     overall_games_won_total = {}
 
-    teams = get_available_teams(df)
+    teams = get_available_teams(df, MIN_TEAM_LIFETIME_YEARS)
     game_count_stats = extract_game_count(df)
 
     for curr_team in teams:
@@ -90,16 +92,14 @@ def extract_win_stats(df):
 
         tmp_home_games_wins = \
             df[(df['h_name_translate'] == curr_team)
-               & (df['h_score'] > df['v_score'])
-               & (df['date_h_duration'] > MIN_TEAM_LIFETIME_YEARS)] \
+               & (df['h_score'] > df['v_score'])] \
                 .groupby('date_year') \
                 .size() \
                 .to_dict()
 
         tmp_visiting_games_wins = \
             df[(df['v_name_translate'] == curr_team)
-               & (df['h_score'] < df['v_score'])
-               & (df['date_v_duration'] > MIN_TEAM_LIFETIME_YEARS)] \
+               & (df['h_score'] < df['v_score'])] \
                 .groupby('date_year') \
                 .size() \
                 .to_dict()
