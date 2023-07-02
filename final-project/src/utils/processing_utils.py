@@ -63,7 +63,7 @@ def extract_game_count(df, min_lifetime=MIN_TEAM_LIFETIME_YEARS):
 
     for curr_year in games_per_year_avg:
         games_per_year_avg[curr_year] = np.mean(np.array(games_per_year_avg[curr_year]))
-    
+
     games_per_year_avg = dict(sorted(games_per_year_avg.items()))
 
     return {
@@ -221,13 +221,33 @@ def calc_win_averages(df):
     }
 
     # TODO check if this function is actually needed somewhere - else delete
-    def calc_years_without_data(df):
-        available_years = df['date_year'].unique()
-        start = min(available_years)
-        end = max(available_years)
 
-        total_years = np.arange(start, end + 1)
-        out = list(set(total_years) - set(available_years))
-        print('unavailable years: ', out)
 
-        return out
+def calc_years_without_data(df):
+    available_years = df['date_year'].unique()
+    start = min(available_years)
+    end = max(available_years)
+
+    total_years = np.arange(start, end + 1)
+    out = list(set(total_years) - set(available_years))
+    print('unavailable years: ', out)
+
+    return out
+
+
+def calc_team_lifetimes(df):
+    team_lifetimes = {}
+
+    group = df.groupby('v_name_translate')
+    for curr_team, curr_entry in group.first().iterrows():
+        if curr_team not in team_lifetimes:
+            team_lifetimes[curr_team] = curr_entry['date_v_duration']
+
+    group = df.groupby('h_name_translate')
+    for curr_team, curr_entry in group.first().iterrows():
+        if curr_team not in team_lifetimes:
+            team_lifetimes[curr_team] = curr_entry['date_h_duration']
+
+    return {
+        'team_lifetimes': team_lifetimes
+    }
