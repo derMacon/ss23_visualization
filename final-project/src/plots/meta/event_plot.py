@@ -53,9 +53,6 @@ def games_per_year_per_team(df):
 
     games_per_year_avg = data['games_per_year_avg']
     log.debug('games_per_year_overall: %s', data)
-
-    # log.debug('min year: %s', min(games_per_year_avg, key=games_per_year_avg.get))
-    # log.debug('mins: %s', dict(sorted(games_per_year_avg.items(), key=lambda x: x[1])))
     log.debug('games_per_year_avg: %s', games_per_year_avg)
 
     plt_with_disruption(ax, games_per_year_avg.keys(), games_per_year_avg.values())
@@ -63,4 +60,7 @@ def games_per_year_per_team(df):
     draw_hint(ax, [1903, count_per_year[1903]], 'new league')
     highlight_interval(ax, [1914, 1918], 'WW1')
     highlight_interval(ax, [1939, 1945], 'WW2')
+    highlight_interval(ax, [1969, 1980], 'data\nunavailable', text_vert_padding=7)
+    highlight_interval(ax, [1989, 2000], 'data\nunavailable')
+    draw_hint(ax, [1960, games_per_year_avg[1960]], 'league\nexpansion')
     draw_hint(ax, [1981, games_per_year_avg[1981]], 'strike')

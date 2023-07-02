@@ -32,7 +32,7 @@ def draw_hint(ax, position, text, horizontalalignment='center', verticalalignmen
             verticalalignment=verticalalignment)
 
 
-def highlight_interval(ax, interval, text, interval_color='#b8b5a7'):
+def highlight_interval(ax, interval, text, interval_color='#b8b5a7', text_vert_padding=3):
     ax.axvspan(interval[0], interval[1],
                label=text, color=interval_color, alpha=0.3)
 
@@ -43,7 +43,7 @@ def highlight_interval(ax, interval, text, interval_color='#b8b5a7'):
     # ax.plot([start, start], height, color='black', linestyle='dotted', linewidth=2, alpha=.5)
     # ax.plot([end, end], height, color='black', linestyle='dotted', linewidth=2, alpha=.5)
 
-    ax.text((start + end) / 2, ax.get_ylim()[0] + 3, text, color='black',
+    ax.text((start + end) / 2, ax.get_ylim()[0] + text_vert_padding, text, color='black',
             ha='center', va='bottom')
 
 
