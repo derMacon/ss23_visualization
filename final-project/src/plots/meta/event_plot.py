@@ -3,6 +3,7 @@ import matplotlib.cm as cm
 import numpy as np
 
 from src.utils.processing_utils import extract_game_count
+from src.utils.styling_utils import *
 from src.utils.logging_config import log
 
 
@@ -34,14 +35,21 @@ def games_per_year_overall(df):
     plt.plot(list(data.keys()), list(data.values()))
 
 
+def check_neighbors(array):
+    array = list(array)
+    for i in range(1, len(array)):
+        if abs(array[i] - array[i-1]) != 1:
+            return False
+    return True
+
 def games_per_year_per_team(df):
     data = extract_game_count(df)
     games_per_year_per_team = data['games_per_year_per_team']
     log.debug('games_per_year_per_team: %s', games_per_year_per_team)
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(12, 6))
     for curr_team, count_per_year in games_per_year_per_team.items():
-        ax.plot(count_per_year.keys(), count_per_year.values(), c=cm.gray(0.7), alpha=0.2, label=curr_team)
+        plt_with_disruption(ax, count_per_year.keys(), count_per_year.values(), c=cm.gray(0.7), alpha=0.2, label=curr_team)
 
     games_per_year_avg = data['games_per_year_avg']
     log.debug('games_per_year_overall: %s', data)
@@ -49,5 +57,10 @@ def games_per_year_per_team(df):
     # log.debug('min year: %s', min(games_per_year_avg, key=games_per_year_avg.get))
     # log.debug('mins: %s', dict(sorted(games_per_year_avg.items(), key=lambda x: x[1])))
     log.debug('games_per_year_avg: %s', games_per_year_avg)
-    ax.plot(games_per_year_avg.keys(), games_per_year_avg.values())
 
+    plt_with_disruption(ax, games_per_year_avg.keys(), games_per_year_avg.values())
+
+    draw_hint(ax, [1903, count_per_year[1903]], 'new league')
+    highlight_interval(ax, [1914, 1918], 'WW1')
+    highlight_interval(ax, [1939, 1945], 'WW2')
+    draw_hint(ax, [1981, games_per_year_avg[1981]], 'strike')
