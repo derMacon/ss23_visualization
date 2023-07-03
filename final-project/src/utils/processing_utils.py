@@ -237,17 +237,47 @@ def calc_years_without_data(df):
 
 def calc_team_lifetimes(df):
     team_lifetimes = {}
+    team_duration = {}
+    sorted_teams_by_first_year = {}
 
     group = df.groupby('v_name_translate')
     for curr_team, curr_entry in group.first().iterrows():
         if curr_team not in team_lifetimes:
             team_lifetimes[curr_team] = curr_entry['date_v_duration']
+        if curr_team not in team_duration:
+            team_duration[curr_team] = (curr_entry['date_v_first_year'], curr_entry['date_v_last_year'])
+        if curr_team not in sorted_teams_by_first_year:
+            sorted_teams_by_first_year[curr_team] = curr_entry['date_v_first_year']
 
     group = df.groupby('h_name_translate')
     for curr_team, curr_entry in group.first().iterrows():
         if curr_team not in team_lifetimes:
             team_lifetimes[curr_team] = curr_entry['date_h_duration']
+        if curr_team not in team_duration:
+            team_duration[curr_team] = (curr_entry['date_h_first_year'], curr_entry['date_h_last_year'])
+        if curr_team not in sorted_teams_by_first_year:
+            sorted_teams_by_first_year[curr_team] = curr_entry['date_h_first_year']
+
+    sorted_teams_by_first_year = dict(sorted(sorted_teams_by_first_year.items(), key=lambda x: x[1]))
+
+    active_years_per_team = {}
+    active_teams_per_year = {}
+
+    for curr_team, curr_lifetime in team_duration.items():
+        active_years = np.arange(curr_lifetime[0], curr_lifetime[1] + 1)
+        active_years_per_team[curr_team] = active_years
+        for curr_year in active_years:
+            if curr_year in active_teams_per_year:
+                active_teams_per_year[curr_year] += 1
+            else:
+                active_teams_per_year[curr_year] = 1
+
+    active_teams_per_year = dict(sorted(active_teams_per_year.items()))
 
     return {
-        'team_lifetimes': team_lifetimes
+        'team_lifetimes': team_lifetimes,
+        'team_duration': team_duration,
+        'active_teams_per_year': active_teams_per_year,
+        'active_years_per_team': active_years_per_team,
+        'sorted_teams_by_first_year': sorted_teams_by_first_year,
     }

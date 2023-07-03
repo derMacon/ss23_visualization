@@ -12,9 +12,12 @@ def attendance_per_year(df):
 
     means_v_score = df.groupby(['date_year'])['attendance'].mean().to_dict()
     x_vals = list(means_v_score.keys())
-    plt_with_disruption(plt, x_vals, means_v_score.values(), c='red', label='mean')
+    fig, ax = plt.subplots()
+    plt_with_disruption(ax, x_vals, means_v_score.values(), c='red', label='mean')
 
-    plt.title('attendance')
+    ax.set_xlabel('attendance')
+    ax.set_ylabel('decade')
+    plt.title('Attendance Per Year')
     plt.legend()
 
 
@@ -26,18 +29,9 @@ def data_per_year(df):
     ax.set_xlabel('decade')
     ax.set_ylabel('entries per year')
 
-    plt.title("Available Data")
+    plt.title("Available Data / Games Played Per Year")
     plt.legend()
 
-
-def games_per_year_overall(df):
-    data = extract_game_count(df)['games_per_year_overall']
-    log.debug('games_per_year: %s', data)
-    # plt.plot(list(data.keys()), list(data.values()))
-
-    fig, ax = plt.subplots()
-    plt_with_disruption(ax, list(data.keys()), list(data.values()))
-    plot_disruption_warning()
 
 def check_neighbors(array):
     array = list(array)

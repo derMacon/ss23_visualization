@@ -1,11 +1,12 @@
 import matplotlib.pyplot as plt
+import random
 import pprint
 import numpy as np
 from matplotlib import cm
 
 from src.utils.datastructure_utils import *
 from src.utils.processing_utils import *
-from src.utils.styling_utils import draw_rectangle
+from src.utils.styling_utils import *
 
 from src.utils.logging_config import log
 
@@ -15,11 +16,16 @@ def v_score_count(df):
 
     threshold = df['v_score'].quantile(0.99)
     df = df.drop(df[df['v_score'] > threshold].index)
-    plt.hist2d(df['date_year'], df['v_score'])
+    fig, ax = plt.subplots()
+    ax.hist2d(df['date_year'], df['v_score'], bins=[20, 15])
 
     means_v_score = df.groupby(['date_year'])['v_score'].mean()
-    plt.plot(means_v_score.keys(), means_v_score, color='red', label='mean')
-    plt.title('visiting score')
+    plt_with_disruption(ax, means_v_score.keys(), means_v_score, c='red', label='mean')
+    # plt.plot(means_v_score.keys(), means_v_score, color='red', label='mean')
+
+    ax.set_ylabel('score')
+    ax.set_xlabel('decade')
+    plt.title('Visiting Score')
     plt.legend()
 
 
@@ -28,11 +34,16 @@ def h_score_count(df):
 
     threshold = df['h_score'].quantile(0.99)
     df = df.drop(df[df['h_score'] > threshold].index)
-    plt.hist2d(df['date_year'], df['h_score'])
+
+    fig, ax = plt.subplots()
+    ax.hist2d(df['date_year'], df['h_score'], bins=[20, 15])
 
     means_h_score = df.groupby(['date_year'])['h_score'].mean()
-    plt.plot(means_h_score.keys(), means_h_score, color='red', label='mean')
-    plt.title('home score')
+    plt_with_disruption(ax, means_h_score.keys(), means_h_score, c='red', label='mean')
+
+    ax.set_ylabel('score')
+    ax.set_xlabel('decade')
+    plt.title('Home Score')
     plt.legend()
 
 
@@ -44,12 +55,12 @@ def vh_score_comparison(df):
     fig, ax = plt.subplots()
 
     # Plot the curves on the same graph
-    ax.plot(means_v_score.keys(), means_v_score, label='visiting team score')
-    ax.plot(means_h_score.keys(), means_h_score, label='home team score')
+    plt_with_disruption(ax, means_v_score.keys(), means_v_score, c='#c95604', label='mean - visiting team score')
+    plt_with_disruption(ax, means_h_score.keys(), means_h_score, c='#3904c9', label='mean - home team score')
 
-    ax.set_xlabel('X-axis')
-    ax.set_ylabel('Y-axis')
-    ax.set_title('compare score')
+    ax.set_xlabel('decade')
+    ax.set_ylabel('score')
+    ax.set_title('Home / Visiting Score Comparison')
     ax.legend()
 
 
@@ -110,15 +121,21 @@ def winning_teams(df):
     log.debug('win_stats: %s', pprint.pformat(win_stats))
 
     fig, ax = plt.subplots()
-    ax.set_title('wins per year')
+    # ax.set_title('Wins Per Year')
     for curr_team, win_stats in overall_games_won_per_year.items():
-        ax.set_xlabel('X-axis')
-        ax.set_ylabel('Y-axis')
         if curr_team in highlighted_teams:
-            ax.plot(win_stats.keys(), win_stats.values(), label=highlighted_teams[curr_team])
-            ax.legend()
+            # ax.plot(win_stats.keys(), win_stats.values(), label=highlighted_teams[curr_team])
+            plt_with_disruption(ax, win_stats.keys(), win_stats.values(),
+                                c=get_random_color(), label=highlighted_teams[curr_team], error_label='_nolegend_')
         else:
-            ax.plot(win_stats.keys(), win_stats.values(), c=cm.gray(0.8), alpha=0.2, zorder=-1)
+            # ax.plot(win_stats.keys(), win_stats.values(), c=cm.gray(0.8), alpha=0.2, zorder=-1)
+            plt_with_disruption(ax, win_stats.keys(), win_stats.values(),
+                                c=cm.gray(0.8), alpha=0.2, error_label='_nolegend_')
+
+    plt.title('Wins Per Year')
+    ax.set_ylabel('wins')
+    ax.set_xlabel('decade')
+    plt.legend()
 
 
 def win_ratio_teams(df):

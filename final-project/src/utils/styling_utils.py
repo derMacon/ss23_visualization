@@ -1,13 +1,15 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import random
 
 from src.utils.logging_config import log
 
 
 # TODO create custom color pallet etc.
 
-def plt_with_disruption(plt_root, x, y, c='#2b2b2b', alpha=1.0, label='_nolegend_'):
+def plt_with_disruption(plt_root, x, y, c='#2b2b2b', alpha=1.0,
+                        label='_nolegend_', error_label='no data available'):
     x = list(x)
     y = list(y)
     # Find the indices where there are gaps in x-values
@@ -15,7 +17,6 @@ def plt_with_disruption(plt_root, x, y, c='#2b2b2b', alpha=1.0, label='_nolegend
 
     # Plot line segments with dotted lines for connections
     start = 0
-    error_label = 'no data available'
     for idx in indices:
         plt_root.plot(x[start:idx + 1], y[start:idx + 1], c=c, alpha=alpha, label=label)
         plt_root.plot([x[idx], x[idx + 1]], [y[idx], y[idx + 1]], c=c, alpha=alpha, linestyle='dotted',
@@ -69,3 +70,13 @@ def draw_rectangle(block_dim):
     # get current axis instance
     ax = plt.gca()
     ax.add_patch(rect)
+
+
+def get_random_color():
+    return random.choice([
+        '#2e492f',  # dark green
+        '#4d775b',  # light green
+        '#d9c5bb',  # eggshell
+        '#a74c20',  # dark orange
+        '#682f18',  # brown
+    ])

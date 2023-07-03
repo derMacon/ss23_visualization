@@ -255,6 +255,14 @@ def _append_team_duration(gamelog_df):
     gamelog_df = pd.concat([gamelog_df, gamelog_df['h_name'].map(duration_mapping).rename('date_h_duration')], axis=1)
     gamelog_df = pd.concat([gamelog_df, gamelog_df['v_name'].map(duration_mapping).rename('date_v_duration')], axis=1)
 
+    first_year_mapping = dict(zip(abreviations_df['team'], abreviations_df['first_year']))
+    gamelog_df = pd.concat([gamelog_df, gamelog_df['h_name'].map(first_year_mapping).rename('date_h_first_year')], axis=1)
+    gamelog_df = pd.concat([gamelog_df, gamelog_df['v_name'].map(first_year_mapping).rename('date_v_first_year')], axis=1)
+
+    last_year_mapping = dict(zip(abreviations_df['team'], abreviations_df['last_year']))
+    gamelog_df = pd.concat([gamelog_df, gamelog_df['h_name'].map(last_year_mapping).rename('date_h_last_year')], axis=1)
+    gamelog_df = pd.concat([gamelog_df, gamelog_df['v_name'].map(last_year_mapping).rename('date_v_last_year')], axis=1)
+
     return gamelog_df
 
 
