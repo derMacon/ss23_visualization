@@ -14,12 +14,12 @@
 ### General
 - presentation of the results serves as an oral exam
 - available graphs at [./final-project/graphs/](./final-project/graphs/)
-- regenerate code by running (`./src/vis_main.py`)[python3 ./src/vis_main.py]
+- regenerate code by running [`python3 ./final-project/src/vis_main.py`](./final-project/src/vis_main.py)
 - dataset source [data world](https://data.world/dataquest/mlb-game-logs)
-  - user: `spam-sh`
+  - user: `spam-sh` (throwaway account)
   - pass: `abc1234abc1234`
 - since the dataset is too large for a GitHub project, download it locally to the following directory
-  - `./datasets/retrosheets/game-logs_combined/game_logs_data-world.csv`
+  - `./final-project/datasets/retrosheets/game-logs_combined/game_logs_data-world.csv`
 
 ### Progress
 - for detailed explanation see the github project [board](https://github.com/users/derMacon/projects/4/views/1)
