@@ -27,7 +27,7 @@ def plt_with_disruption(plt_root, x, y, c='#2b2b2b', alpha=1.0,
         start = idx + 1
 
     # Plot the remaining line segment
-    plt_root.plot(x[start:], y[start:], c=c, alpha=alpha)
+    plt_root.plot(x[start:], y[start:], c=c, alpha=alpha, label=label)
 
 
 def plot_disruption_warning(ax):

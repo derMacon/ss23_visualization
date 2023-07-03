@@ -13,7 +13,7 @@ def attendance_per_year(df):
     means_v_score = df.groupby(['date_year'])['attendance'].mean().to_dict()
     x_vals = list(means_v_score.keys())
     fig, ax = plt.subplots()
-    plt_with_disruption(ax, x_vals, means_v_score.values(), c='red', label='mean')
+    plt_with_disruption(ax, x_vals, means_v_score.values(), label='mean')
 
     ax.set_xlabel('attendance')
     ax.set_ylabel('decade')
