@@ -74,9 +74,13 @@ def draw_rectangle(block_dim):
 
 def get_random_color():
     return random.choice([
-        '#2e492f',  # dark green
-        '#4d775b',  # light green
-        '#d9c5bb',  # eggshell
-        '#a74c20',  # dark orange
-        '#682f18',  # brown
+        # '#2e492f',  # dark green
+        # '#4d775b',  # light green
+        # '#d9c5bb',  # eggshell
+        # '#a74c20',  # dark orange
+        # '#682f18',  # brown
+        'green',
+        'red',
+        'blue',
+        'yellow',
     ])

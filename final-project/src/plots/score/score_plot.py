@@ -120,19 +120,21 @@ def winning_teams(df):
     log.debug('highlighted_teams: %s', highlighted_teams)
     log.debug('win_stats: %s', pprint.pformat(win_stats))
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(10, 5))
     # ax.set_title('Wins Per Year')
+    colors = iter(['red', 'green', 'purple', 'blue'])
     for curr_team, win_stats in overall_games_won_per_year.items():
         if curr_team in highlighted_teams:
             # ax.plot(win_stats.keys(), win_stats.values(), label=highlighted_teams[curr_team])
             plt_with_disruption(ax, win_stats.keys(), win_stats.values(),
-                                c=get_random_color(), label=highlighted_teams[curr_team], error_label='_nolegend_')
+                                c=next(colors), label=highlighted_teams[curr_team], error_label='_nolegend_')
         else:
             # ax.plot(win_stats.keys(), win_stats.values(), c=cm.gray(0.8), alpha=0.2, zorder=-1)
             plt_with_disruption(ax, win_stats.keys(), win_stats.values(),
                                 c=cm.gray(0.8), alpha=0.2, error_label='_nolegend_')
 
     plt.title('Wins Per Year')
+    plt.ylim(0, 140)
     ax.set_ylabel('wins')
     ax.set_xlabel('decade')
     plt.legend()
