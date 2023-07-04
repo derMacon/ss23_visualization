@@ -2,12 +2,15 @@ import numpy as np
 import inspect
 import os
 import matplotlib.pyplot as plt
-from datetime import datetime
 import pandas as pd
+
+from src.utils.logging_config import log
 
 GAME_LOGS_DATA_WORLD = '../datasets/retrosheets/game-logs_combined/game_logs_data-world.csv'
 GAME_LOGS_ABBREVIATIONS = '../datasets/retrosheets/game-logs_combined/TEAMABR.TXT'
 OUTPUT_DIR = '../graphs'
+
+START_YEAR = 1900
 
 _dtypeDict = {
     'date': str,
@@ -195,8 +198,14 @@ def _empty_flags_for_empty_cells(gamelog_df):
     return gamelog_df
 
 
+def _remove_first_incomplete_years(gameslog_df):
+    # return gameslog_df[int(gameslog_df['date']) >= 18900000]
+    return gameslog_df[gameslog_df['date'].apply(lambda x: int(x[:4])) >= START_YEAR]
+    # return gameslog_df[gameslog_df['date_year'] >= 1890]
+
 def _sanitize_df(gamelog_df):
     gamelog_df = _empty_flags_for_empty_cells(gamelog_df)
+    gamelog_df = _remove_first_incomplete_years(gamelog_df)
     return gamelog_df
 
 
@@ -246,6 +255,14 @@ def _append_team_duration(gamelog_df):
     gamelog_df = pd.concat([gamelog_df, gamelog_df['h_name'].map(duration_mapping).rename('date_h_duration')], axis=1)
     gamelog_df = pd.concat([gamelog_df, gamelog_df['v_name'].map(duration_mapping).rename('date_v_duration')], axis=1)
 
+    first_year_mapping = dict(zip(abreviations_df['team'], abreviations_df['first_year']))
+    gamelog_df = pd.concat([gamelog_df, gamelog_df['h_name'].map(first_year_mapping).rename('date_h_first_year')], axis=1)
+    gamelog_df = pd.concat([gamelog_df, gamelog_df['v_name'].map(first_year_mapping).rename('date_v_first_year')], axis=1)
+
+    last_year_mapping = dict(zip(abreviations_df['team'], abreviations_df['last_year']))
+    gamelog_df = pd.concat([gamelog_df, gamelog_df['h_name'].map(last_year_mapping).rename('date_h_last_year')], axis=1)
+    gamelog_df = pd.concat([gamelog_df, gamelog_df['v_name'].map(last_year_mapping).rename('date_v_last_year')], axis=1)
+
     return gamelog_df
 
 
@@ -257,10 +274,17 @@ def _add_custom_fields(gamelog_df):
 
 
 def read_game_logs():
-    print('- started reading csv dataset')
-    df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()})
-    # df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()}, nrows=5000)
-    print('- finished reading csv dataset')
+    log.info('started reading csv dataset')
+
+    debug_row_count = os.environ.get('VIS_ROW_COUNT')
+
+    if debug_row_count is not None:
+        log.info("debug flag set, only reading %s entries", debug_row_count)
+        df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()},
+                         nrows=int(debug_row_count))
+    else:
+        df = pd.read_csv(GAME_LOGS_DATA_WORLD, converters={col: _process_value for col in _dtypeDict.keys()})
+    log.info('finished reading csv dataset')
 
     df = _sanitize_df(df)
     df = _add_custom_fields(df)
@@ -280,7 +304,7 @@ def export_graph(plotting_func, df):
     plotting_func(df)
 
     output_file = os.path.realpath(output_dir + callback_func_name)
-    print('- writing plot: ', output_file)
+    log.info('writing plot: %s', output_file)
 
     plt.savefig(output_file)
     plt.show()
