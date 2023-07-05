@@ -13,6 +13,7 @@
 
 ### Structure
 - [slides / finished graphs](./final-project/slides/pdf/ss23_visualization_mlb.pdf)
+- [issue board](https://github.com/users/derMacon/projects/4)
 - [main python entrypoint](./final-project/src/vis_main.py)
 - [test python package](./final-project/test/)
 - [dataset location](./final-project/datasets/retrosheets/game-logs_combined/game_logs_data-world.csv)
