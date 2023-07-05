@@ -234,3 +234,5 @@ def home_win_avg(df):
     plt.title('Win Average Per Team')
     plt.ylim((0.2, 0.9))
     plt.legend()
+
+    return '- test description 1'

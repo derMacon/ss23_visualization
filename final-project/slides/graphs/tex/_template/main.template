@@ -1,0 +1,17 @@
+\documentclass[pdf]{beamer}
+
+\title{Making Slides}
+\subtitle{...and doing it with Beamer}
+\author{RSI \the\year\ Staff}
+
+\begin{document}
+
+\AtBeginSection[]{
+\begin{frame}{Table of Contents}
+	\tableofcontents[currentsection]
+\end{frame}
+}
+
+%s
+
+\end{document}
