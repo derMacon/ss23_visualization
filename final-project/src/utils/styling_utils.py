@@ -6,10 +6,13 @@ import random
 from src.utils.logging_config import log
 
 
-# TODO create custom color pallet etc.
+def plot_sorted_legend():
+    handles, labels = plt.gca().get_legend_handles_labels()
+    labels, handles = zip(*sorted(zip(labels, handles)))
+    plt.legend(handles, labels)
 
 def plt_with_disruption(plt_root, x, y, c='#2b2b2b', alpha=1.0,
-                        label='_nolegend_', error_label='no data available'):
+                        label='_nolegend_', error_label='_nolegend_'):
     x = list(x)
     y = list(y)
     # Find the indices where there are gaps in x-values
