@@ -1,14 +1,10 @@
-import matplotlib.pyplot as plt
-import random
 import pprint
-import numpy as np
+
 from matplotlib import cm
 
-from src.utils.datastructure_utils import *
+from src.utils.logging_config import log
 from src.utils.processing_utils import *
 from src.utils.styling_utils import *
-
-from src.utils.logging_config import log
 
 
 def v_score_count(df):
@@ -161,12 +157,12 @@ def win_ratio_teams(df):
 
     highlighted_teams = {
         "best average over all time: %s - %.2f" % (
-        max_total_team, win_avg_total_per_team[max_total_team]): max_total_team,
+            max_total_team, win_avg_total_per_team[max_total_team]): max_total_team,
         "worst average over all time: %s - %.2f" % (
-        min_total_team, win_avg_total_per_team[min_total_team]): min_total_team,
+            min_total_team, win_avg_total_per_team[min_total_team]): min_total_team,
         "best average in one year: %s, %s - %.2f" % (best_team_yearly, best_year, best_avg_yearly): best_team_yearly,
         "worst average in one year: %s, %s - %.2f" % (
-        worst_team_yearly, worst_year, worst_avg_yearly): worst_team_yearly,
+            worst_team_yearly, worst_year, worst_avg_yearly): worst_team_yearly,
     }
 
     fig, ax = plt.subplots(figsize=(10, 5))
@@ -186,17 +182,55 @@ def win_ratio_teams(df):
     plt.ylim((0.2, 0.9))
     plt.legend()
 
+
 def home_win_avg(df):
     win_averages = calc_win_averages(df)
     home_games_win_avg_per_year_per_team = win_averages['home_games_win_avg_per_year_per_team']
 
-    fig, ax = plt.subplots()
 
-    for curr_team, win_avg in home_games_win_avg_per_year_per_team.items():
-        plt_with_disruption(ax, win_avg.keys(), win_avg.values())
+    worst_avg_yearly = 1
+    worst_team_yearly = ''
+    worst_year = 0
 
-    ax.set_ylabel('win average')
-    ax.set_xlabel('decade')
-    plt.title('Win Average - Home Games')
+    best_avg_yearly = 0
+    best_team_yearly = ''
+    best_year = 0
+
+    for curr_team, win_avg_per_year in home_games_win_avg_per_year_per_team.items():
+
+        curr_worst_year = min(win_avg_per_year, key=win_avg_per_year.get)
+        curr_worst_score = win_avg_per_year[curr_worst_year]
+        if curr_worst_score < worst_avg_yearly:
+            worst_team_yearly = curr_team
+            worst_avg_yearly = curr_worst_score
+            worst_year = curr_worst_year
+
+        curr_best_year = max(win_avg_per_year, key=win_avg_per_year.get)
+        curr_best_score = win_avg_per_year[curr_best_year]
+        if curr_best_score > best_avg_yearly:
+            best_team_yearly = curr_team
+            best_avg_yearly = curr_best_score
+            best_year = curr_best_year
+
+    highlighted_teams = {
+        "best average in one year: %s, %s - %.2f" % (best_team_yearly, best_year, best_avg_yearly): best_team_yearly,
+        "worst average in one year: %s, %s - %.2f" % (
+            worst_team_yearly, worst_year, worst_avg_yearly): worst_team_yearly,
+    }
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    for curr_team, curr_stats in home_games_win_avg_per_year_per_team.items():
+        plt_with_disruption(ax, list(curr_stats.keys()), list(curr_stats.values()),
+                            c=cm.gray(0.8), alpha=0.2, label='_nolegend_')
+
+    colors = iter(['red', 'green', 'purple', 'blue'])
+    for curr_descr, curr_team in highlighted_teams.items():
+        curr_team_stats = home_games_win_avg_per_year_per_team[curr_team]
+        plt_with_disruption(ax, curr_team_stats.keys(), curr_team_stats.values(),
+                            c=next(colors), label=curr_descr)
+
+    plt.xlabel('decade')
+    plt.ylabel('win average per team')
+    plt.title('Win Average Per Team')
+    plt.ylim((0.2, 0.9))
     plt.legend()
-
