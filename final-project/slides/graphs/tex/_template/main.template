@@ -1,16 +1,25 @@
 \documentclass[pdf]{beamer}
 
-\title{Making Slides}
-\subtitle{...and doing it with Beamer}
-\author{RSI \the\year\ Staff}
+\usetheme[
+	subsectionpage=progressbar,
+	progressbar=frametitle,
+	sectionpage=none,
+	block=fill
+]{metropolis}
+
+\title{Visualization}
+\subtitle{Summer Semester 2023}
+\author{
+    Silas Hoffmann --
+    \texttt{22234721} \\
+    Leonhard Braun --
+    \texttt{21679325} \\
+}
+\institute{Georg-August-Universität Göttingen}
 
 \begin{document}
 
-\AtBeginSection[]{
-\begin{frame}{Table of Contents}
-	\tableofcontents[currentsection]
-\end{frame}
-}
+\maketitle
 
 %s
 

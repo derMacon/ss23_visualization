@@ -17,6 +17,7 @@ class GraphExporter:
     TEX_TEMPLATE_SLIDE = '../slides/graphs/tex/_template/slide.template'
     TEX_TEMPLATE_CHAPTER = '../slides/graphs/tex/_template/section.template'
     TEX_TEMPLATE_MAIN = '../slides/graphs/tex/_template/main.template'
+    TEX_OUTPUT_NAME = 'ss23_visualization_mlb.tex'
 
     OUTPUT_DIR = '../slides/graphs/img'
     OUTPUT_PDF = '../slides/pdf'
@@ -352,7 +353,7 @@ class GraphExporter:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-        output_file = output_dir + "/" + 'ss23_visualization_mlb.tex'
+        output_file = output_dir + "/" + self.TEX_OUTPUT_NAME
         with open(output_file, 'w') as file:
             log.info("writing tex content to: %s", output_file)
             file.write(tex_content)
@@ -372,8 +373,9 @@ class GraphExporter:
 
         tex_slides = ''
         for (img_path, plt_description) in self.plots:
-            markdown_description = self._convert_md_to_latex(plt_description)
-            presentation_slide = latex_slide_template % (img_path, markdown_description)
+            img_name = os.path.basename(img_path).replace('_', '\_') + '.png'
+            markdown_description = '' # self._convert_md_to_latex(plt_description)
+            presentation_slide = latex_slide_template % (img_name, img_path, markdown_description)
             tex_slides += presentation_slide
 
         chapter_latex = latex_chapter_template % ('Plots', tex_slides)

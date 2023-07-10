@@ -1,4 +1,4 @@
-\begin{frame}{What Is Beamer}
+\begin{frame}{%s}
 	\centering
 	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{%s}
 	%s

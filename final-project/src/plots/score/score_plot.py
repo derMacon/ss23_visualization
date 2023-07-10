@@ -47,6 +47,7 @@ def vh_score_comparison(df):
     years = df.groupby(['date_year'])
     means_v_score = years['v_score'].mean()
     means_h_score = years['h_score'].mean()
+    means_diff = np.average(means_h_score - means_v_score)
 
     fig, ax = plt.subplots()
 
@@ -58,6 +59,10 @@ def vh_score_comparison(df):
     ax.set_ylabel('score')
     ax.set_title('Home / Visiting Score Comparison')
     ax.legend()
+
+    return "- visiting score substantially worse than home team\n" \
+           "- in total a visiting team scores "
+
 
 
 def winning_teams(df):
