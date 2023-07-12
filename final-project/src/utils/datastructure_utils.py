@@ -92,3 +92,17 @@ def min_nested_dict(dict_input):
         min_value = min(dict_value, key=dict_value.get)
         tmp[dict_key] = {min_key, min_value}
     return min(tmp, key=tmp.get)
+
+def group_dict_by_decade(dict_input):
+    decade_data = {}
+    for year, value in dict_input.items():
+        decade = year // 10 * 10  # Calculate the decade
+        if decade not in decade_data:
+            decade_data[decade] = []  # Create an empty list for the decade
+        decade_data[decade].append(value)
+
+    for decade, values in decade_data.items():
+        avg_value = sum(values) / len(values)
+        decade_data[decade] = avg_value
+
+    return decade_data

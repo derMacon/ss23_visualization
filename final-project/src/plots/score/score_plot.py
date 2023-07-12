@@ -43,7 +43,7 @@ def h_score_count(df):
     plot_sorted_legend()
 
 
-def vh_score_comparison(df):
+def vh_score_comparison_plt(df):
     years = df.groupby(['date_year'])
     means_v_score = years['v_score'].mean()
     means_h_score = years['h_score'].mean()
@@ -60,8 +60,27 @@ def vh_score_comparison(df):
     ax.set_title('Home / Visiting Score Comparison')
     ax.legend()
 
-    return "- visiting score substantially worse than home team\n" \
-           "- in total a visiting team scores "
+
+def vh_score_comparison_boxplot(df):
+    years = df.groupby(['date_year'])
+    means_v_score = years['v_score'].mean()
+    means_h_score = years['h_score'].mean()
+    comparison = means_h_score - means_v_score
+
+    fig, ax = plt.subplots()
+    grouped_comparisons = group_dict_by_decade(comparison)
+    log.debug("grouped_comparisons: %s", grouped_comparisons)
+    log.debug("vals: %s", grouped_comparisons.values())
+
+    ax.bar(grouped_comparisons.keys(), np.array(list(grouped_comparisons.values())), width=8)
+
+
+    plt_with_disruption(ax, means_v_score.keys(), comparison)
+
+    ax.set_xlabel('decade')
+    ax.set_ylabel('score')
+    ax.set_title('Home / Visiting Score Comparison')
+    ax.legend()
 
 
 
@@ -239,5 +258,3 @@ def home_win_avg(df):
     plt.title('Win Average Per Team')
     plt.ylim((0.2, 0.9))
     plt.legend()
-
-    return '- test description 1'
