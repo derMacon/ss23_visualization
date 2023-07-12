@@ -1,12 +1,11 @@
-import numpy as np
-import shutil
 import inspect
 import os
-import matplotlib.pyplot as plt
-import pandas as pd
-import pypandoc
+import shutil
 import subprocess
-import time
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 from src.utils.logging_config import log
 
@@ -15,7 +14,8 @@ class GraphExporter:
     GAME_LOGS_DATA_WORLD = '../datasets/retrosheets/game-logs_combined/game_logs_data-world.csv'
     GAME_LOGS_ABBREVIATIONS = '../datasets/retrosheets/game-logs_combined/TEAMABR.TXT'
     TEX_TEMPLATE_SLIDE = '../slides/graphs/tex/_template/slide.template'
-    TEX_TEMPLATE_CHAPTER = '../slides/graphs/tex/_template/section.template'
+    TEX_TEMPLATE_SECTION = '../slides/graphs/tex/_template/section.template'
+    TEX_TEMPLATE_SUBSECTION = '../slides/graphs/tex/_template/subsection.template'
     TEX_TEMPLATE_MAIN = '../slides/graphs/tex/_template/main.template'
     TEX_OUTPUT_NAME = 'ss23_visualization_mlb.tex'
 
@@ -27,6 +27,7 @@ class GraphExporter:
 
     def __init__(self):
         self.plots = []
+        self.tex_slides = ''
         self._dtypeDict = {
             'date': str,
             'number_of_game': np.uint32,
@@ -326,11 +327,24 @@ class GraphExporter:
         plt.savefig(output_file)
         plt.show()
 
-        return (output_file, markdown_plot_description)
+        return output_file
+
+    def _build_tex_slide(self, img_path):
+        latex_slide_template = self._load_str_content(self.TEX_TEMPLATE_SLIDE)
+        img_name = os.path.basename(img_path).replace('_', '\_') + '.png'
+        return latex_slide_template % (img_name, img_path)
 
     def append_graph(self, plotting_func):
-        description_tuple = self._export_graph(plotting_func, self._df)
-        self.plots.append(description_tuple)
+        img_path = self._export_graph(plotting_func, self._df)
+        self.tex_slides += self._build_tex_slide(img_path)
+
+    def append_section(self, section):
+        latex_chapter_template = self._load_str_content(self.TEX_TEMPLATE_SECTION)
+        self.tex_slides += latex_chapter_template % section
+
+    def append_subsection(self, subsection):
+        latex_chapter_template = self._load_str_content(self.TEX_TEMPLATE_SUBSECTION)
+        self.tex_slides += latex_chapter_template % subsection
 
     def _load_str_content(self, file_path):
         file_content = ''
@@ -338,16 +352,6 @@ class GraphExporter:
             file_content = file.read()
         return file_content
 
-    def _convert_md_to_latex(self, markdown_text):
-        try:
-            if markdown_text is None or len(markdown_text) == 0:
-                return ""
-
-            latex_text = pypandoc.convert_text(markdown_text, 'latex', format='md')
-            return latex_text.replace("\\tightlist", "")
-
-        except RuntimeError as e:
-            print("Error:", e)
 
     def _write_latex(self, output_dir, tex_content):
         if not os.path.exists(output_dir):
@@ -367,22 +371,11 @@ class GraphExporter:
         return tex_file.replace(".tex", ".pdf")
 
     def build_presentation(self):
-        latex_slide_template = self._load_str_content(self.TEX_TEMPLATE_SLIDE)
-        latex_chapter_template = self._load_str_content(self.TEX_TEMPLATE_CHAPTER)
         latex_main_template = self._load_str_content(self.TEX_TEMPLATE_MAIN)
-
-        tex_slides = ''
-        for (img_path, plt_description) in self.plots:
-            img_name = os.path.basename(img_path).replace('_', '\_') + '.png'
-            markdown_description = '' # self._convert_md_to_latex(plt_description)
-            presentation_slide = latex_slide_template % (img_name, img_path, markdown_description)
-            tex_slides += presentation_slide
-
-        chapter_latex = latex_chapter_template % ('Plots', tex_slides)
-        main_latex = latex_main_template % chapter_latex
-
+        main_latex = latex_main_template % self.tex_slides
         tex_file = self._write_latex(self.OUTPUT_BEAMER, main_latex)
         beamer_output = self._compile_tex_file(tex_file)
+
         log.debug("beamer output: %s", beamer_output)
         log.debug("copy to: %s", self.OUTPUT_PDF)
         shutil.copy(beamer_output, self.OUTPUT_PDF)
