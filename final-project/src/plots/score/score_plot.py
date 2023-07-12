@@ -66,22 +66,26 @@ def vh_score_comparison_boxplot(df):
     means_v_score = years['v_score'].mean()
     means_h_score = years['h_score'].mean()
     comparison = means_h_score - means_v_score
+    log.debug("comparison vals: %s", comparison)
+    log.debug("means_v_score vals: %s", means_v_score)
 
     fig, ax = plt.subplots()
     grouped_comparisons = group_dict_by_decade(comparison)
     log.debug("grouped_comparisons: %s", grouped_comparisons)
-    log.debug("vals: %s", grouped_comparisons.values())
+    log.debug("grouped vals: %s", grouped_comparisons.values())
 
-    ax.bar(grouped_comparisons.keys(), np.array(list(grouped_comparisons.values())), width=8)
+    column_year_width = 8
+    offset = []
+    for i in grouped_comparisons.keys():
+        offset.append(i + column_year_width / 2)
 
-
-    plt_with_disruption(ax, means_v_score.keys(), comparison)
+    ax.bar(offset, np.array(list(grouped_comparisons.values())), width=column_year_width, alpha=0.5)
+    plt_with_disruption(ax, means_v_score.keys(), comparison, label='average home score surplus', c='grey')
 
     ax.set_xlabel('decade')
-    ax.set_ylabel('score')
+    ax.set_ylabel('home score surplus')
     ax.set_title('Home / Visiting Score Comparison')
     ax.legend()
-
 
 
 def winning_teams(df):
@@ -210,7 +214,6 @@ def win_ratio_teams(df):
 def home_win_avg(df):
     win_averages = calc_win_averages(df)
     home_games_win_avg_per_year_per_team = win_averages['home_games_win_avg_per_year_per_team']
-
 
     worst_avg_yearly = 1
     worst_team_yearly = ''
