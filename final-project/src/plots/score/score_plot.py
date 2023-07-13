@@ -61,7 +61,7 @@ def vh_score_comparison_plt(df):
     ax.legend()
 
 
-def vh_score_comparison_boxplot(df):
+def vh_score_comparison_bar(df):
     years = df.groupby(['date_year'])
     means_v_score = years['v_score'].mean()
     means_h_score = years['h_score'].mean()
