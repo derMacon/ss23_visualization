@@ -31,6 +31,18 @@ def merge_dicts_add(fst_dict, snd_dict):
     return out
 
 
+def merge_dicts_subtraction(fst_dict, snd_dict):
+    out = copy.deepcopy(fst_dict)
+
+    for snd_key, snd_val in snd_dict.items():
+        if out.get(snd_key) is not None:
+            out[snd_key] -= snd_val
+        else:
+            out[snd_key] = snd_val
+
+    return out
+
+
 def merge_dicts_nested_add(fst_dict, snd_dict):
     out = copy.deepcopy(fst_dict)
 
