@@ -1,11 +1,15 @@
 from src.plots.meta import event_plot
 from src.plots.meta import teams_plot
+from src.plots.courts import courts_plot
 from src.plots.score import score_plot
 from src.utils.graph_data_io import *
 
 exporter = GraphExporter()
 
 exporter.append_section('Main Plots')
+
+exporter.append_subsection('Leo Graphs - TODO rename')
+exporter.append_graph(courts_plot.courts_homeruns_comp2)
 
 exporter.append_subsection('Score Comparison')
 exporter.append_graph(score_plot.v_score_count)
