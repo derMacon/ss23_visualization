@@ -1,0 +1,26 @@
+\documentclass[pdf]{beamer}
+
+\usetheme[
+	subsectionpage=progressbar,
+	progressbar=frametitle,
+	sectionpage=none,
+	block=fill
+]{metropolis}
+
+\title{Visualization}
+\subtitle{Summer Semester 2023}
+\author{
+    Silas Hoffmann --
+    \texttt{22234721} \\
+    Leonhard Braun --
+    \texttt{21679325} \\
+}
+\institute{Georg-August-Universität Göttingen}
+
+\begin{document}
+
+\maketitle
+
+%s
+
+\end{document}

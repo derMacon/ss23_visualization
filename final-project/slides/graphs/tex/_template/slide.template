@@ -1,0 +1,4 @@
+\begin{frame}{%s}
+	\centering
+	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{%s}
+\end{frame}

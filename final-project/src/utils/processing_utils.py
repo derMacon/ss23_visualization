@@ -220,9 +220,8 @@ def calc_win_averages(df):
         'home_games_win_avg_per_year_per_team': home_games_win_avg_per_year_per_team,
     }
 
-    # TODO check if this function is actually needed somewhere - else delete
 
-
+# TODO check if this function is actually needed somewhere - else delete
 def calc_years_without_data(df):
     available_years = df['date_year'].unique()
     start = min(available_years)

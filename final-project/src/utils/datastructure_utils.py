@@ -31,6 +31,18 @@ def merge_dicts_add(fst_dict, snd_dict):
     return out
 
 
+def merge_dicts_subtraction(fst_dict, snd_dict):
+    out = copy.deepcopy(fst_dict)
+
+    for snd_key, snd_val in snd_dict.items():
+        if out.get(snd_key) is not None:
+            out[snd_key] -= snd_val
+        else:
+            out[snd_key] = snd_val
+
+    return out
+
+
 def merge_dicts_nested_add(fst_dict, snd_dict):
     out = copy.deepcopy(fst_dict)
 
@@ -92,3 +104,17 @@ def min_nested_dict(dict_input):
         min_value = min(dict_value, key=dict_value.get)
         tmp[dict_key] = {min_key, min_value}
     return min(tmp, key=tmp.get)
+
+def group_dict_by_decade(dict_input):
+    decade_data = {}
+    for year, value in dict_input.items():
+        decade = year // 10 * 10  # Calculate the decade
+        if decade not in decade_data:
+            decade_data[decade] = []  # Create an empty list for the decade
+        decade_data[decade].append(value)
+
+    for decade, values in decade_data.items():
+        avg_value = sum(values) / len(values)
+        decade_data[decade] = avg_value
+
+    return decade_data

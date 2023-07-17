@@ -1,14 +1,10 @@
-import matplotlib.pyplot as plt
-import random
 import pprint
-import numpy as np
+
 from matplotlib import cm
 
-from src.utils.datastructure_utils import *
+from src.utils.logging_config import log
 from src.utils.processing_utils import *
 from src.utils.styling_utils import *
-
-from src.utils.logging_config import log
 
 
 def v_score_count(df):
@@ -26,7 +22,7 @@ def v_score_count(df):
     ax.set_ylabel('score')
     ax.set_xlabel('decade')
     plt.title('Visiting Score')
-    plt.legend()
+    plot_sorted_legend()
 
 
 def h_score_count(df):
@@ -44,13 +40,14 @@ def h_score_count(df):
     ax.set_ylabel('score')
     ax.set_xlabel('decade')
     plt.title('Home Score')
-    plt.legend()
+    plot_sorted_legend()
 
 
-def vh_score_comparison(df):
+def vh_score_comparison_plt(df):
     years = df.groupby(['date_year'])
     means_v_score = years['v_score'].mean()
     means_h_score = years['h_score'].mean()
+    means_diff = np.average(means_h_score - means_v_score)
 
     fig, ax = plt.subplots()
 
@@ -64,24 +61,38 @@ def vh_score_comparison(df):
     ax.legend()
 
 
+def vh_score_comparison_bar(df):
+    years = df.groupby(['date_year'])
+    means_v_score = years['v_score'].mean()
+    means_h_score = years['h_score'].mean()
+    comparison = means_h_score - means_v_score
+    log.debug("comparison vals: %s", comparison)
+    log.debug("means_v_score vals: %s", means_v_score)
+
+    fig, ax = plt.subplots()
+    grouped_comparisons = group_dict_by_decade(comparison)
+    log.debug("grouped_comparisons: %s", grouped_comparisons)
+    log.debug("grouped vals: %s", grouped_comparisons.values())
+
+    column_year_width = 8
+    offset = []
+    for i in grouped_comparisons.keys():
+        offset.append(i + column_year_width / 2)
+
+    ax.bar(offset, np.array(list(grouped_comparisons.values())), width=column_year_width, alpha=0.5)
+    plt_with_disruption(ax, means_v_score.keys(), comparison, label='average home score surplus', c='grey')
+
+    ax.set_xlabel('decade')
+    ax.set_ylabel('home score surplus')
+    ax.set_title('Home / Visiting Score Comparison')
+    ax.legend()
+
+
 def winning_teams(df):
-    bug = df[df['v_name_translate'] == 'Washington - Nationals']
-    bug2 = df[df['h_name_translate'] == 'Washington - Nationals']
-
     win_stats = extract_win_stats(df)
-    # win_avg = calc_win_averages(df)
 
-    # home_games_won_per_year = win_stats['home_games_won_per_year']
-    # home_games_won_total = win_stats['home_games_won_total']
-    # visiting_games_won_per_year = win_stats['visiting_games_won_per_year']
-    # visiting_games_won_total = win_stats['visiting_games_won_total']
     overall_games_won_per_year = win_stats['overall_games_won_per_year']
     overall_games_won_total = win_stats['overall_games_won_total']
-
-    # win_avg_per_year_per_team = win_avg['win_avg_per_year_per_team']
-    # win_avg_total_per_team = win_avg['win_avg_total_per_team']
-    # visiting_games_win_avg_per_year_per_team = win_avg['visiting_games_win_avg_per_year_per_team']
-    # home_games_win_avg_per_year_per_team = win_avg['home_games_win_avg_per_year_per_team']
 
     max_total_team = max(overall_games_won_total, key=overall_games_won_total.get)
     min_total_team = min(overall_games_won_total, key=overall_games_won_total.get)
@@ -111,32 +122,142 @@ def winning_teams(df):
             best_year = curr_best_year
 
     highlighted_teams = {
-        max_total_team: "total - most wins: %s - %s" % (max_total_team, overall_games_won_total[max_total_team]),
-        min_total_team: "total - least wins: %s - %s" % (min_total_team, overall_games_won_total[min_total_team]),
-        best_team_yearly: "most wins in one year: %s, %s - %s" % (best_team_yearly, best_year, best_score_yearly),
-        worst_team_yearly: "least wins in one year: %s, %s - %s" % (worst_team_yearly, worst_year, worst_score_yearly),
+        "total - most wins: %s - %s" % (max_total_team, overall_games_won_total[max_total_team]): max_total_team,
+        "total - least wins: %s - %s" % (min_total_team, overall_games_won_total[min_total_team]): min_total_team,
+        "most wins in one year: %s, %s - %s" % (best_team_yearly, best_year, best_score_yearly): best_team_yearly,
+        "least wins in one year: %s, %s - %s" % (worst_team_yearly, worst_year, worst_score_yearly): worst_team_yearly,
     }
 
     log.debug('highlighted_teams: %s', highlighted_teams)
     log.debug('win_stats: %s', pprint.pformat(win_stats))
 
-    fig, ax = plt.subplots()
-    # ax.set_title('Wins Per Year')
+    fig, ax = plt.subplots(figsize=(10, 5))
     for curr_team, win_stats in overall_games_won_per_year.items():
-        if curr_team in highlighted_teams:
-            # ax.plot(win_stats.keys(), win_stats.values(), label=highlighted_teams[curr_team])
-            plt_with_disruption(ax, win_stats.keys(), win_stats.values(),
-                                c=get_random_color(), label=highlighted_teams[curr_team], error_label='_nolegend_')
-        else:
-            # ax.plot(win_stats.keys(), win_stats.values(), c=cm.gray(0.8), alpha=0.2, zorder=-1)
-            plt_with_disruption(ax, win_stats.keys(), win_stats.values(),
-                                c=cm.gray(0.8), alpha=0.2, error_label='_nolegend_')
+        plt_with_disruption(ax, win_stats.keys(), win_stats.values(),
+                            c=cm.gray(0.8), alpha=0.2, error_label='_nolegend_')
+
+    colors = iter(['red', 'green', 'purple', 'blue'])
+    for curr_descr, curr_team in highlighted_teams.items():
+        # ax.plot(win_stats.keys(), win_stats.values(), label=highlighted_teams[curr_team])
+        curr_win_stats = overall_games_won_per_year[curr_team]
+        plt_with_disruption(ax, curr_win_stats.keys(), curr_win_stats.values(),
+                            c=next(colors), label=curr_descr)
 
     plt.title('Wins Per Year')
+    plt.ylim(0, 140)
     ax.set_ylabel('wins')
     ax.set_xlabel('decade')
-    plt.legend()
+    plot_sorted_legend()
 
 
 def win_ratio_teams(df):
-    win_ratio_per_year = extract_win_stats(df)[2:5]
+    win_averages = calc_win_averages(df)
+    win_avg_per_year_per_team = win_averages['win_avg_per_year_per_team']
+
+    win_avg_total_per_team = win_averages['win_avg_total_per_team']
+
+    max_total_team = max(win_avg_total_per_team, key=win_avg_total_per_team.get)
+    min_total_team = min(win_avg_total_per_team, key=win_avg_total_per_team.get)
+
+    worst_avg_yearly = 1
+    worst_team_yearly = ''
+    worst_year = 0
+
+    best_avg_yearly = 0
+    best_team_yearly = ''
+    best_year = 0
+
+    for curr_team, win_avg_per_year in win_avg_per_year_per_team.items():
+
+        curr_worst_year = min(win_avg_per_year, key=win_avg_per_year.get)
+        curr_worst_score = win_avg_per_year[curr_worst_year]
+        if curr_worst_score < worst_avg_yearly:
+            worst_team_yearly = curr_team
+            worst_avg_yearly = curr_worst_score
+            worst_year = curr_worst_year
+
+        curr_best_year = max(win_avg_per_year, key=win_avg_per_year.get)
+        curr_best_score = win_avg_per_year[curr_best_year]
+        if curr_best_score > best_avg_yearly:
+            best_team_yearly = curr_team
+            best_avg_yearly = curr_best_score
+            best_year = curr_best_year
+
+    highlighted_teams = {
+        "best average over all time: %s - %.2f" % (
+            max_total_team, win_avg_total_per_team[max_total_team]): max_total_team,
+        "worst average over all time: %s - %.2f" % (
+            min_total_team, win_avg_total_per_team[min_total_team]): min_total_team,
+        "best average in one year: %s, %s - %.2f" % (best_team_yearly, best_year, best_avg_yearly): best_team_yearly,
+        "worst average in one year: %s, %s - %.2f" % (
+            worst_team_yearly, worst_year, worst_avg_yearly): worst_team_yearly,
+    }
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    for curr_team, curr_stats in win_avg_per_year_per_team.items():
+        plt_with_disruption(ax, list(curr_stats.keys()), list(curr_stats.values()),
+                            c=cm.gray(0.8), alpha=0.2, label='_nolegend_')
+
+    colors = iter(['red', 'green', 'purple', 'blue'])
+    for curr_descr, curr_team in highlighted_teams.items():
+        curr_team_stats = win_avg_per_year_per_team[curr_team]
+        plt_with_disruption(ax, curr_team_stats.keys(), curr_team_stats.values(),
+                            c=next(colors), label=curr_descr)
+
+    plt.xlabel('decade')
+    plt.ylabel('win average per team')
+    plt.title('Win Average Per Team')
+    plt.ylim((0.2, 0.9))
+    plt.legend()
+
+
+def home_win_avg(df):
+    win_averages = calc_win_averages(df)
+    home_games_win_avg_per_year_per_team = win_averages['home_games_win_avg_per_year_per_team']
+
+    worst_avg_yearly = 1
+    worst_team_yearly = ''
+    worst_year = 0
+
+    best_avg_yearly = 0
+    best_team_yearly = ''
+    best_year = 0
+
+    for curr_team, win_avg_per_year in home_games_win_avg_per_year_per_team.items():
+
+        curr_worst_year = min(win_avg_per_year, key=win_avg_per_year.get)
+        curr_worst_score = win_avg_per_year[curr_worst_year]
+        if curr_worst_score < worst_avg_yearly:
+            worst_team_yearly = curr_team
+            worst_avg_yearly = curr_worst_score
+            worst_year = curr_worst_year
+
+        curr_best_year = max(win_avg_per_year, key=win_avg_per_year.get)
+        curr_best_score = win_avg_per_year[curr_best_year]
+        if curr_best_score > best_avg_yearly:
+            best_team_yearly = curr_team
+            best_avg_yearly = curr_best_score
+            best_year = curr_best_year
+
+    highlighted_teams = {
+        "best average in one year: %s, %s - %.2f" % (best_team_yearly, best_year, best_avg_yearly): best_team_yearly,
+        "worst average in one year: %s, %s - %.2f" % (
+            worst_team_yearly, worst_year, worst_avg_yearly): worst_team_yearly,
+    }
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    for curr_team, curr_stats in home_games_win_avg_per_year_per_team.items():
+        plt_with_disruption(ax, list(curr_stats.keys()), list(curr_stats.values()),
+                            c=cm.gray(0.8), alpha=0.2, label='_nolegend_')
+
+    colors = iter(['red', 'green', 'purple', 'blue'])
+    for curr_descr, curr_team in highlighted_teams.items():
+        curr_team_stats = home_games_win_avg_per_year_per_team[curr_team]
+        plt_with_disruption(ax, curr_team_stats.keys(), curr_team_stats.values(),
+                            c=next(colors), label=curr_descr)
+
+    plt.xlabel('decade')
+    plt.ylabel('win average per team')
+    plt.title('Win Average Per Team')
+    plt.ylim((0.2, 0.9))
+    plt.legend()

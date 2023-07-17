@@ -1,21 +1,33 @@
-from utils.graph_data_io import read_game_logs, export_graph
-from plots.meta import event_plot
-from plots.score import score_plot
-from plots.courts import courts_plot
+from src.plots.meta import event_plot
+from src.plots.meta import teams_plot
+from src.plots.score import score_plot
+from src.utils.graph_data_io import *
 
-df = read_game_logs()
+exporter = GraphExporter()
 
-export_graph(courts_plot.courts_homeruns_comp2, df)
-# export_graph(courts_plot.courts_visitors_max, df)
+exporter.append_section('Main Plots')
 
-# export_graph(score_plot.v_score_count, df)
-# export_graph(score_plot.h_score_count, df)
-# export_graph(score_plot.vh_score_comparison, df)
-# export_graph(score_plot.winning_teams, df)
+exporter.append_subsection('Score Comparison')
+exporter.append_graph(score_plot.v_score_count)
+exporter.append_graph(score_plot.h_score_count)
+exporter.append_graph(score_plot.vh_score_comparison_plt)
+exporter.append_graph(score_plot.vh_score_comparison_bar)
+exporter.append_graph(score_plot.winning_teams)
 
-# export_graph(event_plot.data_per_year, df)
-# export_graph(event_plot.data_per_decade, df)
-# export_graph(event_plot.attendance_per_year, df)
-# export_graph(event_plot.attendance_per_decade, df)
+exporter.append_subsection('Meta Data')
+exporter.append_graph(event_plot.games_per_year_per_team)
+exporter.append_graph(event_plot.attendance_per_year)
+exporter.append_graph(event_plot.data_per_year)
+exporter.append_graph(teams_plot.active_teams_per_year)
+exporter.append_graph(teams_plot.comparing_games_played_with_active_teams_per_year)
+
+exporter.append_subsection('Winning Averages')
+exporter.append_graph(score_plot.win_ratio_teams)
+exporter.append_graph(score_plot.home_win_avg)
 
 
+exporter.append_section('Additional Plots')
+exporter.append_subsection('Incomplete Drafts')
+# TODO - filter out graphs
+
+exporter.build_presentation()

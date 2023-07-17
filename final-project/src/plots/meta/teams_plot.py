@@ -36,8 +36,17 @@ def comparing_games_played_with_active_teams_per_year(df):
     team_lifetimes = lifetime_data['team_lifetimes']
     sorted_teams_by_first_year = lifetime_data['sorted_teams_by_first_year']
 
+
     for curr_team, curr_first_year in sorted_teams_by_first_year.items():
-        ax_bar.barh(curr_team, width=team_lifetimes[curr_team], left=curr_first_year, color='gray', alpha=0.5)
+
+        if team_lifetimes[curr_team] < 20:
+            color = 'red'
+        elif team_lifetimes[curr_team] < 70:
+            color = 'peru'
+        else:
+            color = 'forestgreen'
+
+        ax_bar.barh(curr_team, width=team_lifetimes[curr_team], left=curr_first_year, color=color, alpha=0.5)
 
     selected_teams = ['']
     ax_bar.set_yticks(range(len(sorted_teams_by_first_year)))
@@ -50,6 +59,3 @@ def comparing_games_played_with_active_teams_per_year(df):
     plt.xlim(min(years), max(years))
 
     ax_plot.legend()
-    # plt.legend()
-
-    # plt.subplots_adjust(right=0.8)
