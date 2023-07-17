@@ -1,18 +1,21 @@
-from src.plots.meta import event_plot
-from src.plots.meta import teams_plot
-from src.plots.score import score_plot
-from src.utils.graph_data_io import read_game_logs, export_graph
+from utils.graph_data_io import read_game_logs, export_graph
+from plots.meta import event_plot
+from plots.score import score_plot
+from plots.courts import courts_plot
 
 df = read_game_logs()
 
-export_graph(score_plot.v_score_count, df)
-export_graph(score_plot.h_score_count, df)
-export_graph(score_plot.vh_score_comparison, df)
-export_graph(score_plot.winning_teams, df) # TODO hightlights seem a bit off
+export_graph(courts_plot.courts_homeruns_comp2, df)
+# export_graph(courts_plot.courts_visitors_max, df)
 
-export_graph(event_plot.data_per_year, df)
-export_graph(event_plot.attendance_per_year, df)
-export_graph(event_plot.games_per_year_per_team, df)
+# export_graph(score_plot.v_score_count, df)
+# export_graph(score_plot.h_score_count, df)
+# export_graph(score_plot.vh_score_comparison, df)
+# export_graph(score_plot.winning_teams, df)
 
-export_graph(teams_plot.active_teams_per_year, df)
-export_graph(teams_plot.comparing_games_played_with_active_teams_per_year, df)
+# export_graph(event_plot.data_per_year, df)
+# export_graph(event_plot.data_per_decade, df)
+# export_graph(event_plot.attendance_per_year, df)
+# export_graph(event_plot.attendance_per_decade, df)
+
+
