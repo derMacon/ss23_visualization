@@ -29,15 +29,3 @@
 - since the dataset is too large for a GitHub project, download it locally to the following directory
   - `./final-project/datasets/retrosheets/game-logs_combined/game_logs_data-world.csv`
 
-### Progress
-- for detailed explanation see the github project [board](https://github.com/users/derMacon/projects/4/views/1)
-- available graphs at [./final-project/graphs/](./final-project/graphs/)
-- *event plot*: more or less meta information about the dataset
-   - attendance per year
-   - data per year
-   - games per year per team
-- *team plot*: more plots
-   - home and visiting scores over time
-   - winning stats for teams
-
-
