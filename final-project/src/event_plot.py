@@ -64,5 +64,5 @@ def games_per_year_per_team(df):
     draw_hint(ax, [1981, games_per_year_avg[1981]], 'strike')
 
     plt.title('Average Games Played Per Year')
-    plt.xlabel('games played')
-    plt.ylabel('decade')
+    plt.ylabel('games played')
+    plt.xlabel('decade')

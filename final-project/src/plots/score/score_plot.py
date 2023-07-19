@@ -101,7 +101,7 @@ def winning_teams(df):
     worst_team_yearly = ''
     worst_year = 0
 
-    best_score_yearly = 100000
+    best_score_yearly = 0
     best_team_yearly = ''
     best_year = 0
 
@@ -116,7 +116,7 @@ def winning_teams(df):
 
         curr_best_year = max(win_count_per_year, key=win_count_per_year.get)
         curr_best_score = win_count_per_year[curr_best_year]
-        if curr_best_score < best_score_yearly:
+        if curr_best_score > best_score_yearly:
             best_team_yearly = curr_team
             best_score_yearly = curr_best_score
             best_year = curr_best_year
