@@ -1,10 +1,11 @@
 \documentclass[pdf]{beamer}
+\usepackage{hyperref}
 
 \usetheme[
-	subsectionpage=progressbar,
-	progressbar=frametitle,
-	sectionpage=none,
-	block=fill
+    subsectionpage=progressbar,
+    progressbar=frametitle,
+    sectionpage=none,
+    block=fill
 ]{metropolis}
 
 \title{Visualization}
@@ -19,83 +20,104 @@
 
 \begin{document}
 
-\maketitle
+    \maketitle
 
-\section{Main Plots}
-\subsection{Leo Graphs - TODO rename}
-\begin{frame}{courts\_v\_score.png}
-	\centering
-	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/courts/courts_plot/courts_v_score}
-\end{frame}
-\begin{frame}{courts\_total\_score\_vs\_attendance.png}
-	\centering
-	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/courts/courts_plot/courts_total_score_vs_attendance}
-\end{frame}
-\begin{frame}{courts\_homeruns.png}
-	\centering
-	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/courts/courts_plot/courts_homeruns}
-\end{frame}
-\begin{frame}{courts\_visitors\_together.png}
-	\centering
-	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/courts/courts_plot/courts_visitors_together}
-\end{frame}
-\begin{frame}{weekday\_importance.png}
-	\centering
-	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/weeks/week_plot/weekday_importance}
-\end{frame}
-\subsection{Score Comparison}
-\begin{frame}{v\_score\_count.png}
-	\centering
-	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/score/score_plot/v_score_count}
-\end{frame}
-\begin{frame}{h\_score\_count.png}
-	\centering
-	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/score/score_plot/h_score_count}
-\end{frame}
-\begin{frame}{vh\_score\_comparison\_plt.png}
-	\centering
-	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/score/score_plot/vh_score_comparison_plt}
-\end{frame}
-\begin{frame}{vh\_score\_comparison\_bar.png}
-	\centering
-	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/score/score_plot/vh_score_comparison_bar}
-\end{frame}
-\begin{frame}{winning\_teams.png}
-	\centering
-	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/score/score_plot/winning_teams}
-\end{frame}
-\subsection{Meta Data}
-\begin{frame}{games\_per\_year\_per\_team.png}
-	\centering
-	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/event_plot/games_per_year_per_team}
-\end{frame}
-\begin{frame}{attendance\_per\_year.png}
-	\centering
-	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/event_plot/attendance_per_year}
-\end{frame}
-\begin{frame}{data\_per\_year.png}
-	\centering
-	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/event_plot/data_per_year}
-\end{frame}
-\begin{frame}{active\_teams\_per\_year.png}
-	\centering
-	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/src/plots/meta/teams_plot/active_teams_per_year}
-\end{frame}
-\begin{frame}{comparing\_games\_played\_with\_active\_teams\_per\_year.png}
-	\centering
-	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/src/plots/meta/teams_plot/comparing_games_played_with_active_teams_per_year}
-\end{frame}
-\subsection{Winning Averages}
-\begin{frame}{win\_ratio\_teams.png}
-	\centering
-	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/score/score_plot/win_ratio_teams}
-\end{frame}
-\begin{frame}{home\_win\_avg.png}
-	\centering
-	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/score/score_plot/home_win_avg}
-\end{frame}
-\section{Additional Plots}
-\subsection{Incomplete Drafts}
+    \begin{frame}
+        \frametitle{Inhalt}
+        \tableofcontents
+    \end{frame}
+
+
+    \section{Main Plots}
+
+    \subsection{Meta Data}
+    \begin{frame}{Overview over Dataset}
+        \begin{figure}
+            \includegraphics[width=0.475\textwidth]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/event_plot/data_per_year}
+            \hfill
+            \includegraphics[width=0.475\textwidth]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/event_plot/attendance_per_year}
+        \end{figure}
+    \end{frame}
+    \begin{frame}{Historical View / Classification}
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/event_plot/games_per_year_per_team}
+    \end{frame}
+    \begin{frame}{Team Lifetimes}
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/src/plots/meta/teams_plot/comparing_games_played_with_active_teams_per_year}
+    \end{frame}
+    \begin{frame}{Weekday Importance}
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/weeks/week_plot/week1}
+    \end{frame}
+
+    \subsection{Score Comparison}
+    \begin{frame}{Visiting and Home Score Spread}
+        \begin{figure}
+            \includegraphics[width=0.475\textwidth]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/score/score_plot/v_score_count}
+            \hfill
+            \includegraphics[width=0.475\textwidth]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/score/score_plot/h_score_count}
+        \end{figure}
+    \end{frame}
+    \begin{frame}{Visiting / Home Score Comparison - Comparison}
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/score/score_plot/vh_score_comparison_plt}
+    \end{frame}
+    \begin{frame}{Home Score Advantage}
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/score/score_plot/vh_score_comparison_bar}
+    \end{frame}
+    \begin{frame}{Winning Teams}
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/score/score_plot/winning_teams}
+    \end{frame}
+
+    \subsection{Courts Comparison}
+    \begin{frame}{Court Attendence Spread}
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/courts/courts_plot/court_size_range}
+    \end{frame}
+    \begin{frame}{Home Court Advantage}
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/courts/courts_plot/courts_v_score}
+    \end{frame}
+    \begin{frame}{Homeruns per Court}
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/courts/courts_plot/courts_homeruns}
+    \end{frame}
+    \begin{frame}{Court Utilization}
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/courts/courts_plot/courts_visitors_together}
+    \end{frame}
+
+
+    \section{Appendix}
+
+    \subsection{Additional Information}
+    \begin{frame}{Sources / Links}
+        \begin{itemize}
+            \item Dataset: \href{https://data.world/dataquest/mlb-game-logs}{https://data.world/dataquest/mlb-game-logs}
+            \item Github Repository: \href{https://github.com/derMacon/visualization.git}{https://github.com/derMacon/visualization.git}
+        \end{itemize}
+    \end{frame}
+
+    \subsection{Incomplete Drafts}
+    \begin{frame}{Active Teams per Year}
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/src/plots/meta/teams_plot/active_teams_per_year}
+    \end{frame}
+    \begin{frame}{Win Ration per Team}
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/score/score_plot/win_ratio_teams}
+    \end{frame}
+    \begin{frame}{Home Win Average}
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/score/score_plot/home_win_avg}
+    \end{frame}
+    \begin{frame}{Courts Total Score vs. attendence}
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{/home/silas/Documents/university/master/semester-1/visualization/visualization-repo/final-project/slides/graphs/img/plots/courts/courts_plot/courts_total_score_vs_attendance}
+    \end{frame}
 
 
 \end{document}
