@@ -12,10 +12,11 @@ exporter.append_section('Main Plots')
 
 #exporter.append_subsection('Leo Graphs - TODO rename')
 
-exporter.append_graph(courts_plot.courts_v_score)
-exporter.append_graph(courts_plot.courts_total_score_vs_attendance)
-exporter.append_graph(courts_plot.courts_homeruns)
-exporter.append_graph(courts_plot.courts_visitors_together)
+#exporter.append_graph(courts_plot.courts_v_score)
+#exporter.append_graph(courts_plot.courts_v_score)
+#exporter.append_graph(courts_plot.courts_total_score_vs_attendance)
+#exporter.append_graph(courts_plot.courts_homeruns)
+#exporter.append_graph(courts_plot.courts_visitors_together)
 
 exporter.append_graph(week_plot.weekday_importance)
 
