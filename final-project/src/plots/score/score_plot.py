@@ -44,16 +44,43 @@ def h_score_count(df):
 
 
 def vh_score_comparison_plt(df):
+    decades = np.unique(df[['date_decade']].values.ravel())
     years = df.groupby(['date_year'])
     means_v_score = years['v_score'].mean()
     means_h_score = years['h_score'].mean()
     means_diff = np.average(means_h_score - means_v_score)
+    v_scores_decades = df.groupby(['date_decade'])
+    h_scores_decades = df.groupby(['date_decade'])
 
     fig, ax = plt.subplots()
-
+    #print()
     # Plot the curves on the same graph
+    # years.boxplot(by = "v_score")
+    v_score = []
+    h_score = []
+
+    for decades_current in decades:
+        v_score.append(df[(df['date_decade'] == decades_current)]['v_score'])
+        h_score.append(df[(df['date_decade'] == decades_current)]['h_score'])
+
+    #print(v_scores_decades['1900s']['v_score'])
+
+
+    #b.set_color("red")
+
+
+    x_axis = [1903,1913,1923,1933,1943,1953,1963,1983,2003,2013]
+    x_axis2= [1907,1917,1927,1937,1947,1957,1967,1987,2007,2017]
+    width = [4,4,4,4,4,4,4,4,4,4]
+
+    a = ax.boxplot(h_score, "blue", positions=x_axis2, patch_artist=True, showfliers=False,widths=width, boxprops=dict(facecolor='cyan', color='cyan'))
+    b = ax.boxplot(v_score, "red", positions=x_axis , patch_artist=True, showfliers=False,widths=width, boxprops=dict(facecolor='tan', color='tan'))
+    #plt.setp(a, markeredgecolor='red')
+    #plt.setp(b, markeredgecolor='blue')
     plt_with_disruption(ax, means_v_score.keys(), means_v_score, c='#c95604', label='mean - visiting team score')
     plt_with_disruption(ax, means_h_score.keys(), means_h_score, c='#3904c9', label='mean - home team score')
+
+    plt.xticks([1905,1915,1925,1935,1945,1955,1965,1985,2005,2015],['1900', '1910', '1920', '1930', '1940', '1950','1960','1980','2000','2010'])
 
     ax.set_xlabel('decade')
     ax.set_ylabel('score')
@@ -80,7 +107,7 @@ def vh_score_comparison_bar(df):
         offset.append(i + column_year_width / 2)
 
     ax.bar(offset, np.array(list(grouped_comparisons.values())), width=column_year_width, alpha=0.5)
-    plt_with_disruption(ax, means_v_score.keys(), comparison, label='average home score surplus', c='grey')
+    plt_with_disruption(ax, means_v_score.keys(), comparison, label='average home score surplus', c='red')
 
     ax.set_xlabel('decade')
     ax.set_ylabel('home score surplus')
