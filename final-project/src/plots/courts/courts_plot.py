@@ -125,6 +125,7 @@ def courts_total_score_vs_attendance(df):
     #cbar.ax.set_yticklabels(['', '20m', '40m', '60m', '80m', '100m'])
     cbar.ax.get_yaxis().labelpad = 15
     cbar.set_label("total games played in the court", rotation=270)
+    plt.title("does average Gamescore influence popularity?")
 
     #for name,x,y in zip(names_label,mean_label,total_score_label):
     #    plt.annotate(name, (x,y))
@@ -174,7 +175,7 @@ def courts_homeruns(df):
     #    plt.annotate(name, (x, y))
 
     #cbar.ax.set_yticklabels(['','5', '10', '15', '20','25','30','35'])
-    plt.title("do homerunns make stadiums popular?")
+    plt.title("do homeruns make stadiums popular?")
     cbar.ax.get_yaxis().labelpad = 15
     cbar.set_label("games played", rotation = 270)
 
@@ -327,6 +328,7 @@ def court_size_range(df):
 
     assembled_average_attendance = []
     plt.title("spread of average attendance through the decades")
+
     for current_decade in decades:
         plt.figure()
         average_attendance = []
