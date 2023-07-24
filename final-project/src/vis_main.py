@@ -1,11 +1,8 @@
-from plots.courts import courts_plot
-import utils.graph_data_io
-import event_plot
 from plots.score import score_plot
 from plots.courts import courts_plot
 from plots.weeks import week_plot
 from utils.graph_data_io import *
-from src.plots.meta import teams_plot
+from src.plots.meta import teams_plot, event_plot
 
 exporter = GraphExporter()
 
