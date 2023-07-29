@@ -12,7 +12,7 @@
 ## Final Project
 
 ### Structure
-- [slides / finished graphs](./final-project/slides/pdf/ss23_visualization_mlb.pdf)
+- [slides / finished graphs](./final-project/slides/pdf/ss23_visualization_mlb_manual.pdf)
 - [issue board](https://github.com/users/derMacon/projects/4)
 - [main python entrypoint](./final-project/src/vis_main.py)
 - [test python package](./final-project/test/)
