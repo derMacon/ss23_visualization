@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts Example</title>
+    <!-- including ECharts file -->
+    <script src="lib/echarts.js"></script>
+</head>
+<body>
+    <!-- prepare a DOM container with width and height -->
+    <h1>Example for force-based graph embedding</h1>
+    implemented with Apache ECharts, https://echarts.apache.org/en/index.html<br/>
+    (library not included in StudIP download; needs to be available under lib/echarts.js)
+    <p>
+    <a href="javascript:toggleTimer();">Toggle</a> <a href="javascript:grow();">Grow</a> <a href="javascript:growConnected();">Grow Connected</a>
+    </p>
+    <div id="main" style="width: 1000px;height:800px;"></div>
+    <script type="text/javascript">
+        var chartDom = document.getElementById('main');
+        var myChart = echarts.init(chartDom,null,{renderer:'canvas'});
+        var option;
+
+        var data = [{
+            fixed: true,
+            x: myChart.getWidth() / 2,
+            y: myChart.getHeight() / 2,
+            symbolSize: 20,
+            symbol: 'triangle',
+            id: '-1'
+        }];
+
+        var edges = [];
+
+        option = {
+            series: [{
+                type: 'graph',
+                layout: 'force',
+                animation: false,
+                draggable: true,
+                data: data,
+                force: {
+                    // initLayout: 'circular'
+                    // gravity: 0
+                    repulsion: 100,
+                    edgeLength: 5
+                },
+                edges: edges
+            }]
+        };
+        myChart.setOption(option);
+
+
+        function grow() {
+            data.push({
+                id: data.length
+            });
+            var source = Math.round((data.length - 1) * Math.random());
+            var target = Math.round((data.length - 1) * Math.random());
+            if (source !== target) {
+                edges.push({
+                    source: source,
+                    target: target
+                });
+            }
+            myChart.setOption({
+                series: [{
+                    data: data,
+                    edges: edges
+                }]
+            });
+
+            // console.log('nodes: ' + data.length);
+            // console.log('links: ' + data.length);
+        };
+
+        function growConnected() {
+            data.push({
+                id: data.length
+            });
+            var source = (data.length - 1);
+            var target = Math.round((data.length - 2) * Math.random());
+            if (source !== target) {
+                edges.push({
+                    source: source,
+                    target: target
+                });
+            }
+            myChart.setOption({
+                series: [{
+                    data: data,
+                    edges: edges
+                }]
+            });
+
+            // console.log('nodes: ' + data.length);
+            // console.log('links: ' + data.length);
+        };
+
+
+        var timer;
+        //timer=setInterval(grow, 200);
+        timer=null;
+        
+        function toggleTimer() {
+            if(timer!=null) {
+                clearInterval(timer);
+                timer=null;
+            } else {
+                timer=setInterval(grow, 200);
+            }
+        };
+    </script>
+</body>
+</html>
