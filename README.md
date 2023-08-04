@@ -10,6 +10,7 @@
 - solutions need to be published to Stud.IP in order to pass the course
 
 ## Final Project
+- Grade: 1.0
 
 ### Structure
 - [slides / finished graphs](./final-project/slides/pdf/ss23_visualization_mlb_manual.pdf)
@@ -28,4 +29,3 @@
   - pass: `abc1234abc1234`
 - since the dataset is too large for a GitHub project, download it locally to the following directory
   - `./final-project/datasets/retrosheets/game-logs_combined/game_logs_data-world.csv`
-
