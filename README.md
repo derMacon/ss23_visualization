@@ -10,7 +10,7 @@
 - solutions need to be published to Stud.IP in order to pass the course
 
 ## Final Project
-- Grade: 1.0
+- Grade: 1.0 
 
 ### Structure
 - [slides / finished graphs](./final-project/slides/pdf/ss23_visualization_mlb_manual.pdf)
